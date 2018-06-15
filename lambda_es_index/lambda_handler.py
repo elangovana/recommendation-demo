@@ -9,7 +9,7 @@ import json
 import os
 from es_index import connectES,indexDocElement
 
-def lambda_handler(event, context):
+def es_index_handler(event, context):
    esClient = connectES(os.environ['elasticsearch_domain_name'])
    createIndex(esClient)
 

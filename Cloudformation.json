@@ -93,7 +93,7 @@
                     }
                 },
                 "FunctionName": "elasticsearch_index",
-                "Handler": "es_index",
+                "Handler": "lambda_handler.es_index_handler",
                 "MemorySize": "128",
                 "ReservedConcurrentExecutions": 100,
                 "Role": {

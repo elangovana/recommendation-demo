@@ -69,6 +69,7 @@
         },
         "lambdaElasticSearchIndex": {
             "Type": "AWS::Lambda::Function",
+            "DependsOn" : "LambdaEsIndexRole",
             "Properties": {
                 "Code": {
                     "S3Bucket": {

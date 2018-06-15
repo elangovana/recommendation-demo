@@ -10,9 +10,7 @@ phases:
       - echo Installing source NPM dependencies...
   build:
     commands:
-      - echo Build started on `date`
-      - echo Compiling the Node.js code
-#     - mocha HelloWorld.js
+      - pip install -r lambda_es_index/requirements.txt -t lambda_es_index
   post_build:
     commands:
       - echo Build completed on `date`

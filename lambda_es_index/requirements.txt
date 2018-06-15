@@ -1,0 +1,3 @@
+Elasticsearch
+requests
+urllib3

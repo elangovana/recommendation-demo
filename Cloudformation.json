@@ -85,7 +85,13 @@
                     }
                 },
                 "Description": "Invokes elastic search index",
-                "Environment": {},
+                "Environment": {
+                    "Variables": {
+                        "elasticsearch_domain_name": {
+                            "Ref": "elasticSearchDomainName"
+                        }
+                    }
+                },
                 "FunctionName": "elasticsearch_index",
                 "Handler": "es_index",
                 "MemorySize": "128",
@@ -156,7 +162,6 @@
                                             ]
                                         }
                                     ]
-                                   
                                 }
                             ]
                         }

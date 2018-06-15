@@ -7,9 +7,9 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 import urllib
 import json
 import os
-from es_index import connectES,indexDocElement, createIndex
+from elasticsearch_wrapper import connectES,indexDocElement, createIndex
 
-def es_index_handler(event, context):
+def index_handler(event, context):
    esClient = connectES(os.environ['elasticsearch_domain_name'])
    createIndex(esClient)
 

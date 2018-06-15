@@ -10,13 +10,13 @@ phases:
       - echo Installing source NPM dependencies...
   build:
     commands:
-      - pip install -r lambda_elasticsearch_bundle/requirements.txt -t lambda_elasticsearch_bundle
+      - pip install -r lambda_bundle/requirements.txt -t lambda_bundle
   post_build:
     commands:
       - echo Build completed on `date`
-      - cd lambda_elasticsearch_bundle
-      - zip -r ../lambda_elasticsearch_bundle.zip .
+      - cd lambda_bundle
+      - zip -r ../lambda_bundle.zip .
 artifacts:
   files:
-    - lambda_elasticsearch_bundle.zip
+    - lambda_bundle.zip
     - Cloudformation.json

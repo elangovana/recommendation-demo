@@ -24,7 +24,7 @@
         "s3BucketLambdacodeElasticSearchIndex": {
             "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
             "Type": "String",
-            "Default": "lambda_elasticsearch_bundle.zip"
+            "Default": "lambda_bundle.zip"
         },
         "lambdaElasticSearchIndexFunctionName": {
             "Description": "Lambda Function name used for indexing es",
@@ -93,7 +93,7 @@
                     }
                 },
                 "FunctionName": "elasticsearch_index",
-                "Handler": "lambda_handler.es_index_handler",
+                "Handler": "lambda_elasticsearch_handler.index_handler",
                 "MemorySize": "128",
                 "ReservedConcurrentExecutions": 100,
                 "Role": {

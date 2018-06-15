@@ -84,14 +84,14 @@
                 "Handler": "es_index",
                 "MemorySize": "128",
                 "ReservedConcurrentExecutions": 100,
-                "Role": "ElasticSearchIndexRole",
-                "Runtime": "String",
+                "Role": {"Fn::GetAtt":["LambdaEsIndexRole", "Arn"]},
+                "Runtime": "python3.6",
                 "Timeout": 10
 
             }
             
         },
-        "LambdaRole": {
+        "LambdaEsIndexRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "AssumeRolePolicyDocument": {

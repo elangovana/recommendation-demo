@@ -8,7 +8,7 @@
         "elasticSearchDomainName": {
             "Description": "Elastic Search Movies Domain",
             "Type": "String",
-            "Default": "Movies"
+            "Default": "movies"
         }
         
     },

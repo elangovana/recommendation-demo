@@ -82,7 +82,7 @@
                 "Environment": {},
                 "FunctionName": "elasticsearch_index",
                 "Handler": "es_index",
-                "MemorySize": "128M",
+                "MemorySize": "128",
                 "ReservedConcurrentExecutions": 100,
                 "Role": "ElasticSearchIndexRole",
                 "Runtime": "String",

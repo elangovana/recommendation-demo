@@ -30,8 +30,7 @@
         "lambdaElasticSearchIndexFunctionName": {
             "Description": "Lambda Function name used for indexing es",
             "Type": "String",
-            "Default": "indexElasticSearch",
-            "AllowedPattern": "[a-z0-9]+"
+            "Default": "indexElasticSearch"
         }
     },
     "Mappings": {},

@@ -24,7 +24,7 @@
         "s3BucketLambdacodeElasticSearchIndex": {
             "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
             "Type": "String",
-            "Default": "lambdazipelastricsearchindex"
+            "Default": "lambda_es_index.zip"
         },
         "lambdaElasticSearchIndexFunctionName": {
             "Description": "Lambda Function name used for indexing es",

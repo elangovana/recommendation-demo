@@ -17,8 +17,8 @@ phases:
     commands:
       - echo Build completed on `date`
       - cd lambda_es_index
-      - zip -r ../lambda_prender.zip .
+      - zip -r ../lambda_es_index.zip .
 artifacts:
   files:
-    - lambda_prender.zip
+    - lambda_es_index.zip
     - Cloudformation.json

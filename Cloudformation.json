@@ -68,7 +68,7 @@
                 }
             }
         },
-        "lambda_elasticsearch_index": {
+        "lambdaElasticsearchIndex": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {

@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Preinstall do nothing..
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Compiling the Node.js code
+#     - mocha HelloWorld.js
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - cd src
+     # - zip -r ../lambda_prender.zip .
+artifacts:
+  files:
+  #  - lambda_prender.zip
+    - Cloudformation.json

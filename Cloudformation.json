@@ -8,7 +8,14 @@
         "elasticSearchDomainName": {
             "Description": "Elastic Search Movies Domain",
             "Type": "String",
-            "Default": "movies"
+            "Default": "movies",
+            "AllowedPattern":"[a-z0-9]+"
+        },
+        "s3Bucket": {
+            "Description": "The name of the s3 bucket to use for the data",
+            "Type": "String",
+            "Default": "databucket",
+            "AllowedPattern":"[a-z0-9]+"
         }
         
     },
@@ -27,8 +34,8 @@
                 "DedicatedMasterEnabled": "true",
                 "InstanceCount": "2",
                 "ZoneAwarenessEnabled": "true",
-                "InstanceType": "m3.medium.elasticsearch",
-                "DedicatedMasterType": "m3.medium.elasticsearch",
+                "InstanceType": "m4.large.elasticsearch",
+                "DedicatedMasterType": "m4.large.elasticsearch",
                 "DedicatedMasterCount": "3"
               },
               "EBSOptions": {
@@ -45,7 +52,17 @@
                 "rest.action.multi.allow_explicit_index": "true"
               }
             }
-          }
+          },
+        
+        "S3BucketDataSet": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {"Ref":"s3Bucket"}
+                
+            }
+        }
+        
     },
     "Outputs": {
 

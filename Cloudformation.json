@@ -1,0 +1,53 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "",
+    "Metadata": {
+
+    },
+    "Parameters": {      
+        "elasticSearchDomainName": {
+            "Description": "Elastic Search Movies Domain",
+            "Type": "String",
+            "Default": "Movies"
+        }
+        
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        "ElasticsearchDomain": {
+            "Type": "AWS::Elasticsearch::Domain",
+            "Properties": {
+              "DomainName": {"Ref": "elasticSearchDomainName"},
+              "ElasticsearchClusterConfig": {
+                "DedicatedMasterEnabled": "true",
+                "InstanceCount": "2",
+                "ZoneAwarenessEnabled": "true",
+                "InstanceType": "m3.medium.elasticsearch",
+                "DedicatedMasterType": "m3.medium.elasticsearch",
+                "DedicatedMasterCount": "3"
+              },
+              "EBSOptions": {
+                "EBSEnabled": true,
+                "Iops": 0,
+                "VolumeSize": 20,
+                "VolumeType": "gp2"
+              },
+              "SnapshotOptions": {
+                "AutomatedSnapshotStartHour": "0"
+              },
+      
+              "AdvancedOptions": {
+                "rest.action.multi.allow_explicit_index": "true"
+              }
+            }
+          }
+    },
+    "Outputs": {
+
+    }
+}

@@ -9,7 +9,6 @@
             "Default": "movies",
             "AllowedPattern": "[a-z0-9]+"
         },
-
         "s3BucketData": {
             "Description": "The name of the s3 bucket to use for the data",
             "Type": "String",
@@ -75,7 +74,7 @@
         },
         "lambdaElasticSearchIndex": {
             "Type": "AWS::Lambda::Function",
-            "DependsOn" : "LambdaEsIndexRole",
+            "DependsOn": "LambdaEsIndexRole",
             "Properties": {
                 "Code": {
                     "S3Bucket": {
@@ -91,12 +90,15 @@
                 "Handler": "es_index",
                 "MemorySize": "128",
                 "ReservedConcurrentExecutions": 100,
-                "Role": {"Fn::GetAtt":["LambdaEsIndexRole", "Arn"]},
+                "Role": {
+                    "Fn::GetAtt": [
+                        "LambdaEsIndexRole",
+                        "Arn"
+                    ]
+                },
                 "Runtime": "python3.6",
                 "Timeout": 10
-
             }
-            
         },
         "LambdaEsIndexRole": {
             "Type": "AWS::IAM::Role",
@@ -115,65 +117,63 @@
                                 "sts:AssumeRole"
                             ]
                         }
-                    ],
-                    "ManagedPolicyArns": [
-                        "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-                    ],
-                    "Policies": [
-                        {
-                            "PolicyName": "S3GetCodeObjectPolicy",
-                            "PolicyDocument": {
-                                "Version": "2012-10-17",
-                                "Statement": [
-                                    {
-                                        "Effect": "Allow",
-                                        "Action": [
-                                            "s3:GetObject"
-                                        ],
-                                        "Resource": [
-                                            {
-                                                "Fn::Join": [
-                                                    "",
-                                                    [
-                                                        "arn:aws:s3:::",
-                                                        {
-                                                            "Fn::Join": [
-                                                                "/",
-                                                                [
-                                                                    {
-                                                                        "Ref": "s3BucketLambdaCode"
-                                                                    },
-                                                                    {
-                                                                        "Ref": "s3BucketLambdacodeElasticSearchIndex"
-                                                                    }
-                                                                ]
-                                                            ]
-                                                        }
-                                                    ]
-                                                ]
-                                            }
-                                        ],
-                                        "RoleName": {
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                ],
+                "Policies": [
+                    {
+                        "PolicyName": "S3GetCodeObjectPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:GetObject"
+                                    ],
+                                    "Resource": [
+                                        {
                                             "Fn::Join": [
                                                 "",
                                                 [
-                                                    "LambdaExecutionRole_",
+                                                    "arn:aws:s3:::",
                                                     {
-                                                        "Ref": "lambdaElasticSearchIndexFunctionName"
+                                                        "Fn::Join": [
+                                                            "/",
+                                                            [
+                                                                {
+                                                                    "Ref": "s3BucketLambdaCode"
+                                                                },
+                                                                {
+                                                                    "Ref": "s3BucketLambdacodeElasticSearchIndex"
+                                                                }
+                                                            ]
+                                                        ]
                                                     }
                                                 ]
                                             ]
                                         }
+                                    ],
+                                    "RoleName": {
+                                        "Fn::Join": [
+                                            "",
+                                            [
+                                                "LambdaExecutionRole_",
+                                                {
+                                                    "Ref": "lambdaElasticSearchIndexFunctionName"
+                                                }
+                                            ]
+                                        ]
                                     }
-                                ]
-                            }
+                                }
+                            ]
                         }
-                    ]
-                }
+                    }
+                ]
             }
         }
-        
-
     },
     "Outputs": {}
 }

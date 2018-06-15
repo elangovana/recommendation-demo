@@ -7,6 +7,7 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 import urllib
 import json
 import os
+from es_index import connectES,indexDocElement
 
 def lambda_handler(event, context):
    esClient = connectES(os.environ['elasticsearch_domain_name'])

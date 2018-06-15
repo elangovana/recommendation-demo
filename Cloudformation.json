@@ -68,7 +68,7 @@
                 }
             }
         },
-        "lambdaElasticsearchIndex": {
+        "lambdaElasticSearchIndex": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
@@ -153,7 +153,7 @@
                                                 [
                                                     "LambdaExecutionRole_",
                                                     {
-                                                        "Ref": "lambda_elasticsearch_index"
+                                                        "Ref": "lambdaElasticSearchIndex"
                                                     }
                                                 ]
                                             ]

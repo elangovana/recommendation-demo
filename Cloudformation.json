@@ -9,6 +9,7 @@
             "Default": "movies",
             "AllowedPattern": "[a-z0-9]+"
         },
+
         "s3BucketData": {
             "Description": "The name of the s3 bucket to use for the data",
             "Type": "String",
@@ -25,6 +26,12 @@
             "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
             "Type": "String",
             "Default": "lambdazipelastricsearchindex"
+        },
+        "lambdaElasticSearchIndexFunctionName": {
+            "Description": "Lambda Function name used for indexing es",
+            "Type": "String",
+            "Default": "indexElasticSearch",
+            "AllowedPattern": "[a-z0-9]+"
         }
     },
     "Mappings": {},
@@ -153,7 +160,7 @@
                                                 [
                                                     "LambdaExecutionRole_",
                                                     {
-                                                        "Ref": "lambdaElasticSearchIndex"
+                                                        "Ref": "lambdaElasticSearchIndexFunctionName"
                                                     }
                                                 ]
                                             ]

@@ -13,19 +13,19 @@
             "Description": "The name of the s3 bucket to use for the data",
             "Type": "String",
             "Default": "databucket",
-            "AllowedPattern": "[a-z0-9]+"
+            "AllowedPattern": "[a-z0-9-]+"
         },
         "s3BucketLambdaCode": {
             "Description": "The name of the s3 bucket that holds the code",
             "Type": "String",
             "Default": "lambdacodebucket",
-            "AllowedPattern": "[a-z0-9]+"
+            "AllowedPattern": "[a-z0-9-]+"
         },
         "s3BucketLambdacodeElasticSearchIndex": {
             "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
             "Type": "String",
             "Default": "lambdazipelastricsearchindex",
-            "AllowedPattern": "[a-z0-9]+"
+            "AllowedPattern": "[a-z0-9-]+"
         }
     },
     "Mappings": {},

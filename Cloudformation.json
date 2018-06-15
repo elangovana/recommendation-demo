@@ -155,23 +155,24 @@
                                                 ]
                                             ]
                                         }
-                                    ],
-                                    "RoleName": {
-                                        "Fn::Join": [
-                                            "",
-                                            [
-                                                "LambdaExecutionRole_",
-                                                {
-                                                    "Ref": "lambdaElasticSearchIndexFunctionName"
-                                                }
-                                            ]
-                                        ]
-                                    }
+                                    ]
+                                   
                                 }
                             ]
                         }
                     }
-                ]
+                ],
+                "RoleName": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "LambdaExecutionRole_",
+                            {
+                                "Ref": "lambdaElasticSearchIndexFunctionName"
+                            }
+                        ]
+                    ]
+                }
             }
         }
     },

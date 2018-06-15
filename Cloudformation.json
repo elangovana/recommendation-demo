@@ -135,7 +135,7 @@
                                                                 "/",
                                                                 [
                                                                     {
-                                                                        "Ref": "lambdacodebucket"
+                                                                        "Ref": "s3BucketLambdaCode"
                                                                     },
                                                                     {
                                                                         "Ref": "s3BucketLambdacodeElasticSearchIndex"

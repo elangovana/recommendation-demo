@@ -1,70 +1,173 @@
 {
-"AWSTemplateFormatVersion": "2010-09-09",
+    "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "",
-    "Metadata": {
-
-    },
-    "Parameters": {      
+    "Metadata": {},
+    "Parameters": {
         "elasticSearchDomainName": {
             "Description": "Elastic Search Movies Domain",
             "Type": "String",
             "Default": "movies",
-            "AllowedPattern":"[a-z0-9]+"
+            "AllowedPattern": "[a-z0-9]+"
         },
-        "s3Bucket": {
+        "s3BucketData": {
             "Description": "The name of the s3 bucket to use for the data",
             "Type": "String",
             "Default": "databucket",
-            "AllowedPattern":"[a-z0-9]+"
+            "AllowedPattern": "[a-z0-9]+"
+        },
+        "s3BucketLambdaCode": {
+            "Description": "The name of the s3 bucket that holds the code",
+            "Type": "String",
+            "Default": "lambdacodebucket",
+            "AllowedPattern": "[a-z0-9]+"
+        },
+        "s3BucketLambdacodeElasticSearchIndex": {
+            "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
+            "Type": "String",
+            "Default": "lambdazipelastricsearchindex",
+            "AllowedPattern": "[a-z0-9]+"
         }
-        
     },
-    "Mappings": {
-
-    },
-    "Conditions": {
-
-    },
+    "Mappings": {},
+    "Conditions": {},
     "Resources": {
         "ElasticsearchDomain": {
             "Type": "AWS::Elasticsearch::Domain",
             "Properties": {
-              "DomainName": {"Ref": "elasticSearchDomainName"},
-              "ElasticsearchClusterConfig": {
-                "DedicatedMasterEnabled": "true",
-                "InstanceCount": "2",
-                "ZoneAwarenessEnabled": "true",
-                "InstanceType": "m4.large.elasticsearch",
-                "DedicatedMasterType": "m4.large.elasticsearch",
-                "DedicatedMasterCount": "3"
-              },
-              "EBSOptions": {
-                "EBSEnabled": true,
-                "Iops": 0,
-                "VolumeSize": 20,
-                "VolumeType": "gp2"
-              },
-              "SnapshotOptions": {
-                "AutomatedSnapshotStartHour": "0"
-              },
-      
-              "AdvancedOptions": {
-                "rest.action.multi.allow_explicit_index": "true"
-              }
+                "DomainName": {
+                    "Ref": "elasticSearchDomainName"
+                },
+                "ElasticsearchClusterConfig": {
+                    "DedicatedMasterEnabled": "true",
+                    "InstanceCount": "2",
+                    "ZoneAwarenessEnabled": "true",
+                    "InstanceType": "m4.large.elasticsearch",
+                    "DedicatedMasterType": "m4.large.elasticsearch",
+                    "DedicatedMasterCount": "3"
+                },
+                "EBSOptions": {
+                    "EBSEnabled": true,
+                    "Iops": 0,
+                    "VolumeSize": 20,
+                    "VolumeType": "gp2"
+                },
+                "SnapshotOptions": {
+                    "AutomatedSnapshotStartHour": "0"
+                },
+                "AdvancedOptions": {
+                    "rest.action.multi.allow_explicit_index": "true"
+                }
             }
-          },
-        
+        },
         "S3BucketDataSet": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
                 "AccessControl": "Private",
-                "BucketName": {"Ref":"s3Bucket"}
-                
+                "BucketName": {
+                    "Ref": "s3BucketData"
+                }
+            }
+        },
+        "lambda_elasticsearch_index": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "s3BucketLambdaCode"
+                    },
+                    "S3Key": {
+                        "Ref": "s3BucketLambdacodeElasticSearchIndex"
+                    }
+                },
+                "Description": "Invokes elastic search index",
+                "Environment": {},
+                "FunctionName": "elasticsearch_index",
+                "Handler": "es_index",
+                "MemorySize": "128M",
+                "ReservedConcurrentExecutions": 100,
+                "Role": "ElasticSearchIndexRole",
+                "Runtime": "String",
+                "Timeout": 10
+
+            }
+            
+        },
+        "LambdaRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ],
+                    "ManagedPolicyArns": [
+                        "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                    ],
+                    "Policies": [
+                        {
+                            "PolicyName": "S3GetCodeObjectPolicy",
+                            "PolicyDocument": {
+                                "Version": "2012-10-17",
+                                "Statement": [
+                                    {
+                                        "Effect": "Allow",
+                                        "Action": [
+                                            "s3:GetObject"
+                                        ],
+                                        "Resource": [
+                                            {
+                                                "Fn::Join": [
+                                                    "",
+                                                    [
+                                                        "arn:aws:s3:::",
+                                                        {
+                                                            "Fn::Join": [
+                                                                "/",
+                                                                [
+                                                                    {
+                                                                        "Ref": "lambdacodebucket"
+                                                                    },
+                                                                    {
+                                                                        "Ref": "s3BucketLambdacodeElasticSearchIndex"
+                                                                    }
+                                                                ]
+                                                            ]
+                                                        }
+                                                    ]
+                                                ]
+                                            }
+                                        ],
+                                        "RoleName": {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "LambdaExecutionRole_",
+                                                    {
+                                                        "Ref": "lambda_elasticsearch_index"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
             }
         }
         
-    },
-    "Outputs": {
 
-    }
+    },
+    "Outputs": {}
 }

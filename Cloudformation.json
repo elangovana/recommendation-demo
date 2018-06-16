@@ -207,11 +207,7 @@
                     "Aliases": [],
                     "CacheBehaviors": [],
                     "DefaultCacheBehavior": {
-                        "AllowedMethods": [
-                            "HEAD",
-                            "GET",
-                            "POST"
-                        ],
+                        "AllowedMethods": ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"],
                         "ForwardedValues": {
                             "QueryString": "true"
                         },

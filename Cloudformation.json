@@ -52,6 +52,7 @@
     "Resources": {
         "ElasticsearchDomain": {
             "Type": "AWS::Elasticsearch::Domain",
+            "DependsOn":"Cloudfront",
             "Properties": {
                 "DomainName": {
                     "Ref": "elasticSearchDomainName"

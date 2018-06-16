@@ -3,7 +3,8 @@ from pprint import pprint
 import boto3
 import json
 from elasticsearch import Elasticsearch, RequestsHttpConnection
-
+from elasticsearch import helpers
+import csv
 import urllib
 import json
 
@@ -23,35 +24,26 @@ def connectES(esEndPoint):
   exit(3)
 
 
-
-
-def createIndex(esClient):
+def createIndex(esClient, indexName):
  try:
-  res = esClient.indices.exists('metadata-store')
+  res = esClient.indices.exists(indexName)
   print("Index Exists ... {}".format(res))
   if res is False:
-   esClient.indices.create('metadata-store', body=indexDoc)
+   esClient.indices.create(indexName, body=indexDoc)
    return 1
  except Exception as E:
-  print("Unable to Create Index {0}".format("metadata-store"))
+  print("Unable to Create Index {0}".format(indexName))
   print(E)
   exit(4)
 
-def indexDocElement(esClient, key, response):
-  try:
-   indexObjectKey = key
-   indexcreatedDate = response['LastModified']
-   indexcontent_length = response['ContentLength']
-   indexcontent_type = response['ContentType']
-   indexmetadata = json.dumps(response['Metadata'])
-   retval = esClient.index(index='metadata-store', doc_type='images', body={
-     'createdDate': indexcreatedDate,
-     'objectKey': indexObjectKey,
-     'content_type': indexcontent_type,
-     'content_length': indexcontent_length,
-     'metadata': indexmetadata
-   })
-  except Exception as E:
-    print("Doc not indexed")
-    print("Error: ",E)
-    exit(5)
+def indexBulkCsv(esClient, indexName, bucket, key):
+  s3_client = boto3.client('s3')
+  tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
+  s3_client.download_file(bucket, key, tmp_download_file)
+  with open(tmp_download_file) as f:
+      reader = csv.DictReader(f, encoding='utf-8')
+      for success, info in helpers.parallel_bulk(es, reader, thread_count=8, chunk_size=500, index=indexName, doc_type=<yourdoctype>, request_timeout=30):
+          if not success: 
+            print('Doc failed', info) 
+            exit(4)
+

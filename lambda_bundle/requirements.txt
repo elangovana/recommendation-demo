@@ -1,3 +1,5 @@
 Elasticsearch
 requests
 urllib3
+aws-requests-auth
+boto3

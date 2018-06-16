@@ -7,7 +7,7 @@ phases:
       - apt-get install zip
   pre_build:
     commands:
-      - echo Installing source NPM dependencies...
+      - echo Nothing to pre_build..
   build:
     commands:
       - pip install -r lambda_bundle/requirements.txt -t lambda_bundle

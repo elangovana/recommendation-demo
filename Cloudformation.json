@@ -40,6 +40,11 @@
             "Description": "The key of web app within s3 bucket containing web app",
             "Type": "String",
             "Default": "webapp"
+        },
+        "s3OriginAccessId": {
+            "Description": "The S3 orgin access ID for cloudfront access",
+            "Type": "String",
+            "Default": ""
         }
     },
     "Mappings": {},
@@ -225,10 +230,12 @@
                             "S3OriginConfig": {
                                 "OriginAccessIdentity": {
                                     "Fn::Join": [
-                                        "/",
+                                        "",
                                         [
-                                            "origin-access-identity/cloudfront",
-                                            "E15MNIMTCFKK4C"
+                                            "origin-access-identity/cloudfront/",
+                                            {
+                                                "Ref": "s3OriginAccessId"
+                                            }
                                         ]
                                     ]
                                 }

@@ -38,10 +38,10 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
       "s3": {
       
         "object": {
-          "key": "movies.txt"
+          "key": "movies.csv"
         },
         "bucket": {
-          "name": "<your-bucket-containing-movies.txt>"
+          "name": "<your-bucket-containing-movies.csv>"
         }
     
       }

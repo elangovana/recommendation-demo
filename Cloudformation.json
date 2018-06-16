@@ -208,7 +208,8 @@
                         "ForwardedValues": {
                             "QueryString": "true"
                         },
-                        "TargetOriginId": "webappcontent"
+                        "TargetOriginId": "webappcontent",
+                        "ViewerProtocolPolicy": "allow-all"
                     },
                     "DefaultRootObject": "index.html",
                     "Enabled": "True",
@@ -222,13 +223,15 @@
                                 "Ref": "s3BucketNameWebAppKey"
                             },
                             "S3OriginConfig": {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        "origin-access-identity/cloudfront",
-                                        "E15MNIMTCFKK4C"
+                                "OriginAccessIdentity": {
+                                    "Fn::Join": [
+                                        "/",
+                                        [
+                                            "origin-access-identity/cloudfront",
+                                            "E15MNIMTCFKK4C"
+                                        ]
                                     ]
-                                ]
+                                }
                             }
                         }
                     ]

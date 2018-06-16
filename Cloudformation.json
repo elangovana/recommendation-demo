@@ -207,7 +207,15 @@
                     "Aliases": [],
                     "CacheBehaviors": [],
                     "DefaultCacheBehavior": {
-                        "AllowedMethods": ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"],
+                        "AllowedMethods": [
+                            "HEAD",
+                            "DELETE",
+                            "POST",
+                            "GET",
+                            "OPTIONS",
+                            "PUT",
+                            "PATCH"
+                        ],
                         "ForwardedValues": {
                             "QueryString": "true"
                         },
@@ -260,5 +268,28 @@
             }
         }
     },
-    "Outputs": {}
+    "Outputs": {
+        "cloudFormationEndpoint": {
+            "Description": "The domain name of cloudfront",
+            "Value": {
+                "Fn::GetAtt": [
+                    "Cloudfront",
+                    "DomainName"
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::Join": [
+                        ":",
+                        [
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            "cloudFormationEndpoint"
+                        ]
+                    ]
+                }
+            }
+        }
+    }
 }

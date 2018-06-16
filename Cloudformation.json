@@ -266,6 +266,59 @@
                     }
                 }
             }
+        },
+        "cloudfrontOriginAccessBucketPolicy": {
+            "Type": "AWS::IAM::Role",
+            "DependsOn": "cloudfrontOriginAccess",
+            "Properties": {
+                "Policies": [
+                    {
+                        "PolicyName": "CloudFrontOrginAccessPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Principal": {
+                                        "CanonicalUser": {
+                                            "Fn::GetAtt": ["cloudfrontOriginAccess","S3CanonicalUserId"]
+                                        }
+                                    },
+                                    "Action": [
+                                        "s3:GetObject"
+                                    ],
+                                    "Resource": {
+                                        "Fn::Join": [
+                                            "",
+                                            [
+                                                "arn:aws:s3:::",
+                                                {
+                                                    "Ref": "s3BucketNameWebApp"
+                                                },
+                                                {
+                                                    "Ref": "s3BucketNameWebAppKey"
+                                                },
+                                                "/*"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "RoleName": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            "CloudfrontOriginAccessPolicyRole"
+                        ]
+                    ]
+                }
+            }
         }
     },
     "Outputs": {

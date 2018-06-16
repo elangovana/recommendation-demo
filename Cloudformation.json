@@ -99,7 +99,7 @@
                     "Variables": {
                         "elasticsearch_domain_name": {
                             "Fn::GetAtt": [
-                                "elasticSearchDomainName",
+                                "ElasticsearchDomain",
                                 "DomainEndpoint"
                             ]
                         }

@@ -30,6 +30,16 @@
             "Description": "Lambda Function name used for indexing es",
             "Type": "String",
             "Default": "indexElasticSearch"
+        },
+        "s3BucketNameWebApp": {
+            "Description": "The dns of the s3 bucket containing web app",
+            "Type": "String",
+            "Default": "webappbucket-name.s3.amazonaws.com"
+        },
+        "s3BucketNameWebAppKey": {
+            "Description": "The key of web app within s3 bucket containing web app",
+            "Type": "String",
+            "Default": "webapp"
         }
     },
     "Mappings": {},
@@ -88,7 +98,10 @@
                 "Environment": {
                     "Variables": {
                         "elasticsearch_domain_name": {
-                            "Fn::GetAtt":[ "elasticSearchDomainName", "DomainEndpoint"]
+                            "Fn::GetAtt": [
+                                "elasticSearchDomainName",
+                                "DomainEndpoint"
+                            ]
                         }
                     }
                 },
@@ -178,6 +191,46 @@
                         ]
                     ]
                 }
+            }
+        },
+        "Cloudfront": {
+            "Type": "AWS::CloudFront::Distribution",
+            "Properties": {
+                "DistributionConfig": {
+                    "Aliases": [],
+                    "CacheBehaviors": [],
+                    "DefaultCacheBehavior": {
+                        "AllowedMethods": ["HEAD", "GET", "POST"],                 
+                        "ForwardedValues": {                       
+                            "QueryString" : "true"
+                          },                 
+                        "TargetOriginId": "webappcontent"
+                    },
+                    "DefaultRootObject": "index.html",
+                    "Enabled": "True",
+                    "Origins": [
+                        {
+                            "DomainName": {
+                                "Ref": "s3BucketNameWebApp"
+                            },
+                            "Id": "webappcontent",
+                            "OriginPath": {
+                                "Ref": "s3BucketNameWebAppKey"
+                            },
+                            "S3OriginConfig": {
+                                "Fn::Join:": [
+                                    "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "StackName",
+                        "Value": "AWS::StackName"
+                    }
+                ]
             }
         }
     },

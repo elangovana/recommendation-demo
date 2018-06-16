@@ -41,10 +41,10 @@
             "Type": "String",
             "Default": "webapp"
         },
-        "s3OriginAccessId": {
-            "Description": "The S3 orgin access ID for cloudfront access",
+        "s3OriginAccessComments": {
+            "Description": "The S3 orgin access comments for cloudfront origin id",
             "Type": "String",
-            "Default": ""
+            "Default": "RecommendationEngineWebApp"
         }
     },
     "Mappings": {},
@@ -200,6 +200,7 @@
         },
         "Cloudfront": {
             "Type": "AWS::CloudFront::Distribution",
+            "DependsOn":"cloudfrontOriginAccess",
             "Properties": {
                 "DistributionConfig": {
                     "Aliases": [],
@@ -234,7 +235,7 @@
                                         [
                                             "origin-access-identity/cloudfront/",
                                             {
-                                                "Ref": "s3OriginAccessId"
+                                                "Ref": "cloudfrontOriginAccess"
                                             }
                                         ]
                                     ]
@@ -249,6 +250,17 @@
                         "Value": "AWS::StackName"
                     }
                 ]
+            }
+        },
+        "cloudfrontOriginAccess": {
+            "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+            "Properties": {
+                "CloudFrontOriginAccessIdentityConfig": {
+                      
+                        "Comment" : {"Ref": "s3OriginAccessComments"}
+                      }
+                   
+                }
             }
         }
     },

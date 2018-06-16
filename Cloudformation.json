@@ -306,6 +306,7 @@
                                     ],
                                     "Resource": {
                                         "Fn::Join": [
+                                            "",
                                             [
                                                 "arn:aws:s3:::",
                                                 {

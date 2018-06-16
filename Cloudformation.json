@@ -201,7 +201,10 @@
         },
         "Cloudfront": {
             "Type": "AWS::CloudFront::Distribution",
-            "DependsOn": ["cloudfrontOriginAccess","cloudfrontOriginAccessBucketPolicy"],
+            "DependsOn": [
+                "cloudfrontOriginAccess",
+                "cloudfrontOriginAccessBucketPolicy"
+            ],
             "Properties": {
                 "DistributionConfig": {
                     "Aliases": [],
@@ -271,18 +274,31 @@
             "Type": "AWS::S3::BucketPolicy",
             "DependsOn": "cloudfrontOriginAccess",
             "Properties": {
-                "Bucket" : {"Ref" : "s3BucketNameWebApp"},
+                "Bucket": {
+                    "Fn::Select": [
+                        0,
+                        {
+                            "Fn::Split": [
+                                ".",
+                                {
+                                    "Ref": "s3BucketNameWebApp"
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "Policies": [
                     {
-                       
                         "PolicyDocument": {
-                            
                             "Statement": [
                                 {
                                     "Effect": "Allow",
                                     "Principal": {
                                         "CanonicalUser": {
-                                            "Fn::GetAtt": ["cloudfrontOriginAccess","S3CanonicalUserId"]
+                                            "Fn::GetAtt": [
+                                                "cloudfrontOriginAccess",
+                                                "S3CanonicalUserId"
+                                            ]
                                         }
                                     },
                                     "Action": [
@@ -290,11 +306,20 @@
                                     ],
                                     "Resource": {
                                         "Fn::Join": [
-                                            "",
                                             [
                                                 "arn:aws:s3:::",
                                                 {
-                                                    "Ref": "s3BucketNameWebApp"
+                                                    "Fn::Select": [
+                                                        0,
+                                                        {
+                                                            "Fn::Split": [
+                                                                ".",
+                                                                {
+                                                                    "Ref": "s3BucketNameWebApp"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
                                                 },
                                                 {
                                                     "Ref": "s3BucketNameWebAppKey"

@@ -39,7 +39,7 @@
         "s3BucketNameWebAppKey": {
             "Description": "The key of web app within s3 bucket containing web app",
             "Type": "String",
-            "Default": "webapp"
+            "Default": "/webapp"
         },
         "s3OriginAccessComments": {
             "Description": "The S3 orgin access comments for cloudfront origin id",
@@ -201,7 +201,7 @@
         },
         "Cloudfront": {
             "Type": "AWS::CloudFront::Distribution",
-            "DependsOn": "cloudfrontOriginAccess",
+            "DependsOn": ["cloudfrontOriginAccess","cloudfrontOriginAccessBucketPolicy"],
             "Properties": {
                 "DistributionConfig": {
                     "Aliases": [],
@@ -268,14 +268,15 @@
             }
         },
         "cloudfrontOriginAccessBucketPolicy": {
-            "Type": "AWS::IAM::Role",
+            "Type": "AWS::S3::BucketPolicy",
             "DependsOn": "cloudfrontOriginAccess",
             "Properties": {
+                "Bucket" : {"Ref" : "s3BucketNameWebApp"},
                 "Policies": [
                     {
-                        "PolicyName": "CloudFrontOrginAccessPolicy",
+                       
                         "PolicyDocument": {
-                            "Version": "2012-10-17",
+                            
                             "Statement": [
                                 {
                                     "Effect": "Allow",

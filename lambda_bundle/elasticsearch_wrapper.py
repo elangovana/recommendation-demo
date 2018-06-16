@@ -29,6 +29,12 @@ def createIndex(esClient, indexName):
   res = esClient.indices.exists(indexName)
   print("Index Exists ... {}".format(res))
   if res is False:
+   index_doc = {
+    "settings" : {
+        "number_of_shards": 1,
+        "number_of_replicas": 0
+    }
+    }
    esClient.indices.create(indexName, body=indexDoc)
    return 1
  except Exception as E:
@@ -42,7 +48,7 @@ def indexBulkCsv(esClient, indexName, bucket, key):
   s3_client.download_file(bucket, key, tmp_download_file)
   with open(tmp_download_file) as f:
       reader = csv.DictReader(f, encoding='utf-8')
-      for success, info in helpers.parallel_bulk(es, reader, thread_count=8, chunk_size=500, index=indexName, doc_type=<yourdoctype>, request_timeout=30):
+      for success, info in helpers.parallel_bulk(es, reader, thread_count=8, chunk_size=500, index=indexName, doc_type="movies" request_timeout=30):
           if not success: 
             print('Doc failed', info) 
             exit(4)

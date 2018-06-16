@@ -79,15 +79,7 @@
                 }
             }
         },
-        "S3BucketDataSet": {
-            "Type": "AWS::S3::Bucket",
-            "Properties": {
-                "AccessControl": "Private",
-                "BucketName": {
-                    "Ref": "s3BucketData"
-                }
-            }
-        },
+        
         "lambdaElasticSearchIndex": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": "LambdaEsIndexRole",

@@ -32,5 +32,4 @@ def index_handler(event, context):
         indexBulkCsv(esClient, indexName, bucket, key)
     except Exception as e:
         print(e)
-        print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
         raise e

@@ -333,18 +333,7 @@
                             ]
                         }
                     }
-                ],
-                "RoleName": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            {
-                                "Ref": "AWS::StackName"
-                            },
-                            "CloudfrontOriginAccessPolicyRole"
-                        ]
-                    ]
-                }
+                ]
             }
         }
     },

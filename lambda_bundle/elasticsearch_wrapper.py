@@ -29,7 +29,7 @@ def createIndex(esClient, indexName):
   res = esClient.indices.exists(indexName)
   print("Index Exists ... {}".format(res))
   if res is False:
-   index_doc = {
+   indexDoc = {
     "settings" : {
         "number_of_shards": 1,
         "number_of_replicas": 0

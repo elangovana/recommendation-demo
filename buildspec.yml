@@ -13,14 +13,17 @@ phases:
       - pip install -r lambda_bundle/requirements.txt -t lambda_bundle
   post_build:
     commands:
-      - echo packaging lambda `date`
-      - cd lambda_bundle && zip -r ../lambda_bundle.zip . && cd ..
+      - echo creating package
+      - mkdir buildoutput
+      - cd lambda_bundle && zip -r buildoutput/lambda_bundle.zip . && cd ..
       - echo packaging webapp
-      - mkdir tmp_webapp && cp -r webapp tmp_webapp
+      - cp -r webapp buildoutput
+      - cp  Cloudformation.json  buildoutput
       
 artifacts:
-  files:
-    - lambda_bundle.zip
-    - Cloudformation.json
-  base-directory: tmp_webapp
+  files: 
+    - '**/*'
+  base-directory: 
+    - buildoutput
+
   

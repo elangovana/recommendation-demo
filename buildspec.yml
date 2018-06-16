@@ -15,6 +15,7 @@ phases:
     commands:
       - echo creating package
       - mkdir buildoutput
+      - ls
       - cd lambda_bundle && zip -r buildoutput/lambda_bundle.zip . && cd ..
       - echo packaging webapp
       - cp -r webapp buildoutput

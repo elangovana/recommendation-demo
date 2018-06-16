@@ -11,7 +11,7 @@ from elasticsearch_wrapper import connectES, indexBulkCsv, createIndex
 
 def index_handler(event, context):
    esClient = connectES(os.environ['elasticsearch_domain_name'])
-   indexName = "Movies"
+   indexName = "movies"
    createIndex(esClient, indexName)
 
    # Get the object from the event and show its content type

@@ -52,7 +52,7 @@
     "Resources": {
         "ElasticsearchDomain": {
             "Type": "AWS::Elasticsearch::Domain",
-            "DependsOn":"Cloudfront",
+            "DependsOn": "Cloudfront",
             "Properties": {
                 "DomainName": {
                     "Ref": "elasticSearchDomainName"
@@ -201,7 +201,7 @@
         },
         "Cloudfront": {
             "Type": "AWS::CloudFront::Distribution",
-            "DependsOn":"cloudfrontOriginAccess",
+            "DependsOn": "cloudfrontOriginAccess",
             "Properties": {
                 "DistributionConfig": {
                     "Aliases": [],
@@ -257,10 +257,9 @@
             "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
             "Properties": {
                 "CloudFrontOriginAccessIdentityConfig": {
-                      
-                        "Comment" : {"Ref": "s3OriginAccessComments"}
-                      }
-                   
+                    "Comment": {
+                        "Ref": "s3OriginAccessComments"
+                    }
                 }
             }
         }

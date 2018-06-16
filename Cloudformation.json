@@ -190,7 +190,6 @@
                         "PolicyDocument": {
                             "Version": "2012-10-17",
                             "Statement": [
-                                
                                 {
                                     "Effect": "Allow",
                                     "Action": [
@@ -200,7 +199,17 @@
                                         "es:ESHttpDelete",
                                         "es:ESHttpPut"
                                     ],
-                                    "Resource":{"Fn::Join":["",["arn:aws:es:::domain/", {"Ref":"elasticSearchDomainName"}]]} 
+                                    "Resource": {
+                                        "Fn::Join": [
+                                            "",
+                                            [
+                                                "arn:aws:es:::domain/",
+                                                {
+                                                    "Ref": "elasticSearchDomainName"
+                                                }
+                                            ]
+                                        ]
+                                    }
                                 }
                             ]
                         }

@@ -18,7 +18,7 @@ phases:
       - ls
       - cd lambda_bundle  && zip -r ../buildoutput/lambda_bundle.zip .  && cd ..
       - echo packaging webapp
-      - cp -r webapp buildoutput
+      - cd webapp  && zip -r ../buildoutput/webapp.zip .  && cd .. 
       - cp  Cloudformation.json  buildoutput
       
 artifacts:

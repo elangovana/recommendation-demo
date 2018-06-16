@@ -218,7 +218,7 @@
                                 "Ref": "s3BucketNameWebAppKey"
                             },
                             "S3OriginConfig": {
-                                "Fn::Join:": [
+                                "Fn::Join": [
                                     "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
                                 ]
                             }

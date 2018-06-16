@@ -200,7 +200,7 @@
                                         "es:ESHttpDelete",
                                         "es:ESHttpPut"
                                     ],
-                                    "Resource":{"Fn::Join":["","arn:aws:es:::domain/", {"Ref":"elasticSearchDomainName"}]} 
+                                    "Resource":{"Fn::Join":["",["arn:aws:es:::domain/", {"Ref":"elasticSearchDomainName"}]]} 
                                 }
                             ]
                         }

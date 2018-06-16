@@ -25,12 +25,12 @@ def index_handler(event, context):
     createIndex(esClient, indexName)
 
     # Get the object from the event and show its content type
-        bucket = event['Records'][0]['s3']['bucket']['name']
-        key = urllib.unquote_plus(
-            event['Records'][0]['s3']['object']['key'].encode('utf8'))
-        try:
-            indexBulkCsv(esClient, indexName, bucket, key)
-        except Exception as e:
-            print(e)
-            print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
-            raise e
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = urllib.unquote_plus(
+        event['Records'][0]['s3']['object']['key'].encode('utf8'))
+    try:
+        indexBulkCsv(esClient, indexName, bucket, key)
+    except Exception as e:
+        print(e)
+        print('Error getting object {} from bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket))
+        raise e

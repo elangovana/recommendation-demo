@@ -200,10 +200,14 @@
                     "Aliases": [],
                     "CacheBehaviors": [],
                     "DefaultCacheBehavior": {
-                        "AllowedMethods": ["HEAD", "GET", "POST"],                 
-                        "ForwardedValues": {                       
-                            "QueryString" : "true"
-                          },                 
+                        "AllowedMethods": [
+                            "HEAD",
+                            "GET",
+                            "POST"
+                        ],
+                        "ForwardedValues": {
+                            "QueryString": "true"
+                        },
                         "TargetOriginId": "webappcontent"
                     },
                     "DefaultRootObject": "index.html",
@@ -219,7 +223,11 @@
                             },
                             "S3OriginConfig": {
                                 "Fn::Join": [
-                                    "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
+                                    "/",
+                                    [
+                                        "origin-access-identity/cloudfront",
+                                        "E15MNIMTCFKK4C"
+                                    ]
                                 ]
                             }
                         }

@@ -14,10 +14,9 @@ phases:
   post_build:
     commands:
       - echo packaging lambda `date`
-      - cd lambda_bundle
-      - zip -r ../lambda_bundle.zip .
+      - cd lambda_bundle && zip -r ../lambda_bundle.zip . && cd ..
       - echo packaging webapp
-      - cd && mkdir tmp_webapp && cp -r webapp tmp_webapp
+      - mkdir tmp_webapp && cp -r webapp tmp_webapp
       
 artifacts:
   files:

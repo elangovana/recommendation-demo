@@ -1,6 +1,7 @@
 import boto3
 from scipy.sparse import coo_matrix
 import json
+import os
 
 def lambda_handler(event, context):
     # TODO implement

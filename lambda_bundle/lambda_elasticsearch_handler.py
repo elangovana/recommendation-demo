@@ -51,7 +51,7 @@ def search_movies_handler(event, context):
     movie_search = event["queryStringParameters"]["movie"]
     esClient = connectES(esdomain, auth)
     indexName = "movies"
-    query = {{"match": {"movietitle": movie_search}}
+    query = {{"match": {"movietitle": movie_search}}}
 
-    search(esClient, indexName, query, 5)
-    return
+    return search(esClient, indexName, query, 5)
+    

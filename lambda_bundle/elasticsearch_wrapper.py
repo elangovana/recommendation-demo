@@ -55,7 +55,6 @@ def indexBulkCsv(esClient, indexName, bucket, key, fieldnames, delimiter='|'):
         helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30)
 
 def search(esClient, indexName, query, size):
-  
     res = esClient.search(index=indexName, body={"query": query, "size": size})
     return res
            

@@ -6,7 +6,7 @@ import os
 def lambda_handler(event, context):
     # TODO implement
     endpoint = os.environ['sagemaker_endpoint']
-    moviesList = [11164, 1194, 1223, 1224, 1246, 1311, 1347, 1413, 1538, 1771]
+    moviesList = [1164, 1194, 1223, 1224, 1246, 1311, 1347, 1413, 1538, 1771]
     matrix = convert_to_matrix(moviesList)
     return invoke_sagemaker(endpoint, matrix)
 

@@ -26,8 +26,7 @@ def index_handler(event, context):
 
     # Get the object from the event and show its content type
     bucket = event['Records'][0]['s3']['bucket']['name']
-    key = urllib.parse.unquote_plus(
-        event['Records'][0]['s3']['object']['key'].encode('utf8'))
+    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
     try:
         indexBulkCsv(esClient, indexName, bucket, key)
     except Exception as e:

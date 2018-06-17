@@ -41,7 +41,8 @@ def invoke_sagemaker(endpoint, cooMatrix):
         Body=json_data,
         ContentType='application/json'
     )
-    return response
+    string_data = response.StreamingBody.read().decode("utf-8")
+    return string_data
 
 
 def fm_serializer(data):

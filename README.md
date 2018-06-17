@@ -28,7 +28,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 ```
 
 
-# Test
+# Load Elastic seach movies data
 1. Lambda ES index test, using sample data as 
 ```json
 {
@@ -50,3 +50,15 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
   ]
 }
 ```
+
+# Test
+1. Test search lambda
+```json
+{
+  "queryStringParameters": {
+    "movie": "the"
+  }
+}
+```
+
+2. Sage

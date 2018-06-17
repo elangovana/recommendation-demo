@@ -49,13 +49,11 @@ def indexBulkCsv(esClient, indexName, bucket, key):
     s3_client = boto3.client('s3')
     tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
     s3_client.download_file(bucket, key, tmp_download_file)
-    fieldnames = ["movieid", "movietitle", "releasedate", "videoreleasedate",
+    fieldnames = ["_id", "movietitle", "releasedate", "videoreleasedate",
                   "IMDbURL", "unknown", "Action", "Adventure", "Animation",
                   "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                   "FilmNoir", "Horror", "Musical",  "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
     with open(tmp_download_file) as f:
         reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter='|')
-        for success, info in helpers.parallel_bulk(esClient, reader, thread_count=8, chunk_size=500, index=indexName, doc_type="movies", request_timeout=30):
-            if not success:
-                print('Doc failed', info)
-                exit(4)
+        helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30):
+           

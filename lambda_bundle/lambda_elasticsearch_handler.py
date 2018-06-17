@@ -15,8 +15,8 @@ def index_handler(event, context):
     esdomain = os.environ['elasticsearch_domain_name']
     auth = AWSRequestsAuth(aws_access_key=os.environ['AWS_ACCESS_KEY_ID'],
                            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-                           aws_token=esdomain,
-                           aws_host=esClient,
+                           aws_token=os.environ['AWS_SESSION_TOKEN'],
+                           aws_host=esdomain,
                            aws_region='us-east-1',
                            aws_service='es')
 

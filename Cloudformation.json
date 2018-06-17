@@ -232,10 +232,11 @@
                     "Fn::Join": [
                         "",
                         [
-                            "LambdaExecutionRole_",
                             {
-                                "Ref": "lambdaElasticSearchIndexFunctionName"
-                            }
+                                "Ref": "AWS::StackName"
+                            },
+                            "LambdaExecutionRole_LambdaEsIndexRole"
+                           
                         ]
                     ]
                 }

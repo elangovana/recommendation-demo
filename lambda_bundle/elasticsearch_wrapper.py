@@ -55,5 +55,5 @@ def indexBulkCsv(esClient, indexName, bucket, key):
                   "FilmNoir", "Horror", "Musical",  "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
     with open(tmp_download_file) as f:
         reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter='|')
-        helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30):
+        helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30)
            

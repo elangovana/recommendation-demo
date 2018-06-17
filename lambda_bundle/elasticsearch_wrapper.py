@@ -1,6 +1,6 @@
 from __future__ import print_function
 from pprint import pprint
-import boto3
+
 import json
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch import helpers
@@ -45,12 +45,10 @@ def createIndex(esClient, indexName):
         exit(4)
 
 
-def indexBulkCsv(esClient, indexName, bucket, key, fieldnames, delimiter='|'):
-    s3_client = boto3.client('s3')
-    tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
-    s3_client.download_file(bucket, key, tmp_download_file)
+def indexBulkCsv(esClient, indexName, filepath, fieldnames, delimiter='|'):
+ 
     
-    with open(tmp_download_file) as f:
+    with open(filepath) as f:
         reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter=delimiter)
         helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30)
 

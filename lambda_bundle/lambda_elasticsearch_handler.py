@@ -12,6 +12,14 @@ from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 
 def index_handler(event, context):
+   # Get the object
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+
+    s3_client = boto3.client('s3')
+    tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
+    s3_client.download_file(bucket, key, tmp_download_file)
+ # es
     esdomain = os.environ['elasticsearch_domain_name']
     auth = AWSRequestsAuth(aws_access_key=os.environ['AWS_ACCESS_KEY_ID'],
                            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
@@ -30,11 +38,9 @@ def index_handler(event, context):
                   "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                   "FilmNoir", "Horror", "Musical",  "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
 
-    # Get the object from the event and show its content type
-    bucket = event['Records'][0]['s3']['bucket']['name']
-    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
     try:
-        indexBulkCsv(esClient, indexName, bucket, key, fieldnames, delimiter)
+        indexBulkCsv(esClient, indexName, tmp_download_file,
+                     fieldnames, delimiter)
     except Exception as e:
         print(e)
         raise e

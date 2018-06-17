@@ -7,8 +7,8 @@ def lambda_handler(event, context):
     # TODO implement
     endpoint = os.environ['sagemaker_endpoint']
     moviesList = [11164, 1194, 1223, 1224, 1246, 1311, 1347, 1413, 1538, 1771]
-    cooMatrix = convert_to_matrix(moviesList)
-    return invoke_sagemaker(endpoint, cooMatrix)
+    matrix = convert_to_matrix(moviesList)
+    return invoke_sagemaker(endpoint, matrix)
 
 
 def convert_to_matrix(moviesList):
@@ -18,7 +18,7 @@ def convert_to_matrix(moviesList):
     # TODO Validate that the movie list must be within the movies Range.
     nbFeatures = nbUsers+nbMovies
     nbRatings = len(moviesList)
-    X = coo_matrix((nbRatings, nbFeatures), dtype='float32')
+    X = lil_matrix((nbRatings, nbFeatures), dtype='float32')
 
     line = 0
     userId = 100

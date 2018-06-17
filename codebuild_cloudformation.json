@@ -1,0 +1,187 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Deploys code pipeline to build recommendation",
+    "Metadata": {},
+    "Parameters": {
+        "codeBuildProjectName": {
+            "Description": "The code build project name",
+            "Type": "String",
+            "Default": "RecommendationEngineCodeBuild"
+        },
+        "gitSourcePublicRepository": {
+            "Description": "The github source public repository",
+            "Type": "String",
+            "Default": "https://github.com/elangovana/recommendation-demo"
+        },
+        "buildImage": {
+            "Description": "The python build image",
+            "Type": "String",
+            "Default": "aws/codebuild/python:3.6.5"
+        },
+        "buildArtifactsS3Bucket": {
+            "Description": "The s3 bucket where artifacts will be placed post build",
+            "Type": "String",
+            "Default": "mybucketname"
+        },
+        "buildArtifactsS3Key": {
+            "Description": "The s3 key within the bucket where artifacts will be placed post build",
+            "Type": "String",
+            "Default": "/builds"
+        }
+    },
+    "Mappings": {},
+    "Conditions": {},
+    "Resources": {
+        "CodeBuild": {
+            "Type": "AWS::CodeBuild::Project",
+            "Properties": {
+                "Artifacts": {
+                    "Location": {
+                        "Ref": "buildArtifactsS3Bucket"
+                    },
+                    "Name": {
+                        "Ref": "codeBuildProjectName"
+                    },
+                    "Path": {
+                        "Ref": "buildArtifactsS3Key"
+                    },
+                    "Type": " S3"
+                },
+                "Description": "Builds Recommendation engine",
+                "Environment": {
+                    "ComputeType": "LINUX_CONTAINER",
+                    "Image": {
+                        "Ref": "buildImage"
+                    }
+                },
+                "Name": {
+                    "Ref": "codeBuildProjectName"
+                },
+                "ServiceRole": {
+                    "Ref": "codeBuildIamRole"
+                },
+                "Source": {
+                    "Location": {
+                        "Ref": "gitSourcePublicRepository"
+                    },
+                    "Type": "GITHUB"
+                },
+                "Tags": [
+                    {
+                        "Key": "StackName",
+                        "Value": "AWS::StackName"
+                    }
+                ],
+                "TimeoutInMinutes": 20
+            }
+        },
+        "codeBuildIamRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "codebuild.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyName": "S3PutArtifactsPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "s3:PutObject"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Fn::Join": [
+                                                            "/",
+                                                            [
+                                                                {
+                                                                    "Ref": "buildArtifactsS3Bucket"
+                                                                },
+                                                                {
+                                                                    "Ref": "buildArtifactsS3Key"
+                                                                }
+                                                            ]
+                                                        ]
+                                                    }
+                                                ]
+                                            ]
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Fn::Join": [
+                                                            "/",
+                                                            [
+                                                                {
+                                                                    "Ref": "s3BucketData"
+                                                                },
+                                                                {
+                                                                    "Ref": "*"
+                                                                }
+                                                            ]
+                                                        ]
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "PolicyName": "CloudWatchLogsFullAccess",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "logs:*"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "RoleName": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            "codeBuildIamRole"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "Outputs": {}
+}

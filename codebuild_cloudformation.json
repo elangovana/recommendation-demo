@@ -26,7 +26,7 @@
         "buildArtifactsS3Key": {
             "Description": "The s3 key within the bucket where artifacts will be placed post build",
             "Type": "String",
-            "Default": "/builds"
+            "Default": "builds"
         }
     },
     "Mappings": {},
@@ -49,7 +49,7 @@
                 },
                 "Description": "Builds Recommendation engine",
                 "Environment": {
-                    "Type":"LINUX_CONTAINER",
+                    "Type": "LINUX_CONTAINERFix",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
                     "Image": {
                         "Ref": "buildImage"
@@ -65,7 +65,8 @@
                     "Location": {
                         "Ref": "gitSourcePublicRepository"
                     },
-                    "Type": "GITHUB"
+                    "Type": "GITHUB",
+                    "GitCloneDepth": 1
                 },
                 "Tags": [
                     {

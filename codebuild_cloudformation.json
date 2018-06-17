@@ -122,7 +122,8 @@
                                                                 },
                                                                 {
                                                                     "Ref": "buildArtifactsS3Key"
-                                                                }
+                                                                },
+                                                                "/*"
                                                             ]
                                                         ]
                                                     }

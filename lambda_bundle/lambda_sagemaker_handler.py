@@ -3,10 +3,12 @@ from scipy.sparse import lil_matrix
 import json
 import os
 
+
 def lambda_handler(event, context):
     # TODO implement
     endpoint = os.environ['sagemaker_endpoint']
-    moviesList = [1164, 1194, 1223, 1224, 1246, 1311, 1347, 1413, 1538, 1771]
+    # [1164, 1194, 1223, 1224, 1246, 1311, 1347, 1413, 1538, 1771]
+    moviesList = event["body"]
     matrix = convert_to_matrix(moviesList)
     return invoke_sagemaker(endpoint, matrix)
 
@@ -30,12 +32,13 @@ def convert_to_matrix(moviesList):
 
     return X
 
+
 def invoke_sagemaker(endpoint, cooMatrix):
     client = boto3.client('runtime.sagemaker')
     json_data = fm_serializer(cooMatrix.toarray())
     response = client.invoke_endpoint(
         EndpointName=endpoint,
-        Body=json_data ,
+        Body=json_data,
         ContentType='application/json'
     )
     return response.Body

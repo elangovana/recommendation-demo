@@ -76,7 +76,13 @@
                 },
                 "AdvancedOptions": {
                     "rest.action.multi.allow_explicit_index": "true"
-                }
+                },
+                "Tags": [
+                    {
+                        "Key": "StackName",
+                        "Value": "AWS::StackName"
+                    }
+                ]
             }
         },
         
@@ -114,7 +120,13 @@
                     ]
                 },
                 "Runtime": "python3.6",
-                "Timeout": 10
+                "Timeout": 10,
+                "Tags": [
+                    {
+                        "Key": "StackName",
+                        "Value": "AWS::StackName"
+                    }
+                ]
             }
         },
         "LambdaEsIndexRole": {

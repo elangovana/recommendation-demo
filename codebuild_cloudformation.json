@@ -49,7 +49,7 @@
                 },
                 "Description": "Builds Recommendation engine",
                 "Environment": {
-                    "Type": "LINUX_CONTAINERFix",
+                    "Type": "LINUX_CONTAINER",
                     "ComputeType": "BUILD_GENERAL1_SMALL",
                     "Image": {
                         "Ref": "buildImage"

@@ -3,7 +3,7 @@ SageMaker recommendation engine demo
 
 # Build
 1. Create a codepipeline stack using codebuild_cloudformation.json
-2. Build on code build buildspec.yml (use python 3.6 runtime). This spec creates the following artifacts
+2. Start a build on codepipeline. This should upload the following artifacts in the s3 bucket you specified in the codepipeline stack
   * Cloudformation template
   * webapp
   * lambda code

@@ -49,6 +49,7 @@
                 },
                 "Description": "Builds Recommendation engine",
                 "Environment": {
+                    "Type":" BUILD_GENERAL1_SMALL",
                     "ComputeType": "LINUX_CONTAINER",
                     "Image": {
                         "Ref": "buildImage"
@@ -120,27 +121,6 @@
                                                                 },
                                                                 {
                                                                     "Ref": "buildArtifactsS3Key"
-                                                                }
-                                                            ]
-                                                        ]
-                                                    }
-                                                ]
-                                            ]
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "arn:aws:s3:::",
-                                                    {
-                                                        "Fn::Join": [
-                                                            "/",
-                                                            [
-                                                                {
-                                                                    "Ref": "s3BucketData"
-                                                                },
-                                                                {
-                                                                    "Ref": "*"
                                                                 }
                                                             ]
                                                         ]

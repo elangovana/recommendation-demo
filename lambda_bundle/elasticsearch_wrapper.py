@@ -7,7 +7,7 @@ from elasticsearch import helpers
 import csv
 import urllib
 import json
-import uuid
+
 
 
 def connectES(esEndPoint, auth):

@@ -3,7 +3,7 @@ from pprint import pprint
 import boto3
 import json
 from elasticsearch import Elasticsearch, RequestsHttpConnection
-
+import uuid
 import urllib
 import json
 import os

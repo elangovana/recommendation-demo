@@ -54,7 +54,7 @@ def indexBulkCsv(esClient, indexName, bucket, key):
                   "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                   "FilmNoir", "Horror", "Musical",  "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
     with open(tmp_download_file) as f:
-        reader = csv.DictReader(f,  fieldnames=fieldname, delimiter='|')
+        reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter='|')
         for success, info in helpers.parallel_bulk(esClient, reader, thread_count=8, chunk_size=500, index=indexName, doc_type="movies", request_timeout=30):
             if not success:
                 print('Doc failed', info)

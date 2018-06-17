@@ -50,7 +50,7 @@ def indexBulkCsv(esClient, indexName, bucket, key):
     tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
     s3_client.download_file(bucket, key, tmp_download_file)
     with open(tmp_download_file) as f:
-        reader = csv.DictReader(f, encoding='utf-8')
+        reader = csv.DictReader(f)
         for success, info in helpers.parallel_bulk(esClient, reader, thread_count=8, chunk_size=500, index=indexName, doc_type="movies", request_timeout=30):
             if not success:
                 print('Doc failed', info)

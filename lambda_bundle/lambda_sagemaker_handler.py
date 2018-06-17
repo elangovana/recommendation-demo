@@ -42,7 +42,8 @@ def invoke_sagemaker(endpoint, cooMatrix):
         ContentType='application/json'
     )
     print(response.keys())
-    string_data = response.StreamingBody.read().decode("utf-8")
+    print(type(response["Body"]))
+    string_data = response["Body"].read().decode("utf-8")
     return string_data
 
 

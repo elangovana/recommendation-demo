@@ -120,9 +120,7 @@
                                                                 {
                                                                     "Ref": "buildArtifactsS3Bucket"
                                                                 },
-                                                                {
-                                                                    "Ref": "buildArtifactsS3Key"
-                                                                },
+                                                                
                                                                 "/*"
                                                             ]
                                                         ]

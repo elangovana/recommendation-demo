@@ -41,8 +41,7 @@ def invoke_sagemaker(endpoint, cooMatrix):
         Body=json_data,
         ContentType='application/json'
     )
-    print(response.keys())
-    print(type(response["Body"]))
+
     string_data = response["Body"].read().decode("utf-8")
     return string_data
 

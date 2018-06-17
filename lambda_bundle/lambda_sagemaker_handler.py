@@ -1,5 +1,5 @@
 import boto3
-from scipy.sparse import coo_matrix
+from scipy.sparse import lil_matrix
 import json
 import os
 

@@ -45,15 +45,17 @@ def createIndex(esClient, indexName):
         exit(4)
 
 
-def indexBulkCsv(esClient, indexName, bucket, key):
+def indexBulkCsv(esClient, indexName, bucket, key, fieldnames, delimiter='|'):
     s3_client = boto3.client('s3')
     tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
     s3_client.download_file(bucket, key, tmp_download_file)
-    fieldnames = ["_id", "movietitle", "releasedate", "videoreleasedate",
-                  "IMDbURL", "unknown", "Action", "Adventure", "Animation",
-                  "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
-                  "FilmNoir", "Horror", "Musical",  "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
+    
     with open(tmp_download_file) as f:
-        reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter='|')
+        reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter=delimiter)
         helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30)
+
+def search(esClient, indexName, query, size):
+  
+    res = esClient.search(index=indexName, body={"query": query, "size": size})
+    return res
            

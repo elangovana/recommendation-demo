@@ -21,11 +21,13 @@ def index_handler(event, context):
     s3_client.download_file(bucket, key, tmp_download_file)
  # es
     esdomain = os.environ['elasticsearch_domain_name']
+    region =  os.environ['AWS_REGION']
+    print(region)
     auth = AWSRequestsAuth(aws_access_key=os.environ['AWS_ACCESS_KEY_ID'],
                            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
                            aws_token=os.environ['AWS_SESSION_TOKEN'],
                            aws_host=esdomain,
-                           aws_region='us-east-1',
+                           aws_region=region,
                            aws_service='es')
 
     esClient = connectES(esdomain, auth)
@@ -48,11 +50,13 @@ def index_handler(event, context):
 
 def search_movies_handler(event, context):
     esdomain = os.environ['elasticsearch_domain_name']
+    region =  os.environ['AWS_REGION']
+    print(region)
     auth = AWSRequestsAuth(aws_access_key=os.environ['AWS_ACCESS_KEY_ID'],
                            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
                            aws_token=os.environ['AWS_SESSION_TOKEN'],
                            aws_host=esdomain,
-                           aws_region='us-east-1',
+                           aws_region=region,
                            aws_service='es')
     movie_search = event["queryStringParameters"]["movie"]
     esClient = connectES(esdomain, auth)

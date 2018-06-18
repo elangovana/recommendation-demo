@@ -88,12 +88,13 @@
                         {
                             "Resource": {
                                 "Fn::Join:": [
-                                    ":",
+                                    "",
                                     [
-                                        "arn:aws:es:",
+                                        "arn:aws:es::",
                                         {
                                             "Ref": "AWS::AccountId"
                                         },
+                                        ":domain/",
                                         {
                                             "Ref": "elasticSearchDomainName"
                                         },
@@ -104,9 +105,9 @@
                             "Principal": {
                                 "AWS": {
                                     "Fn::Join:": [
-                                        ":",
+                                        "",
                                         [
-                                            "arn:aws:iam:",
+                                            "arn:aws:iam::",
                                             {
                                                 "Ref": "AWS::AccountId"
                                             },
@@ -137,12 +138,13 @@
                             },
                             "Resource": {
                                 "Fn::Join:": [
-                                    ":",
+                                    "",
                                     [
-                                        "arn:aws:es:",
+                                        "arn:aws:es::",
                                         {
                                             "Ref": "AWS::AccountId"
                                         },
+                                        ":domain/",
                                         {
                                             "Ref": "elasticSearchDomainName"
                                         },

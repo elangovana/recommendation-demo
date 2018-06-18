@@ -11,25 +11,24 @@
         },
         "yourPublicIpCidr": {
             "Description": "The IP address CIDR range that you want to allow access through Kibana",
-            "Type": "String",
-            "Default": "0.0.0.0"
+            "Type": "String"
+           
         },
         "s3BucketData": {
             "Description": "The name of the s3 bucket to use for the data",
-            "Type": "String",
-            "Default": "databucket",
-            "AllowedPattern": "[a-z0-9-]+"
+            "Type": "String"
+           
         },
         "s3BucketLambdaCode": {
             "Description": "The name of the s3 bucket that holds the code",
             "Type": "String",
-            "Default": "lambdacodebucket",
-            "AllowedPattern": "[a-z0-9-]+"
+        
+            "AllowedPattern": "[A-Za-z0-9-]+"
         },
         "s3BucketLambdacodeElasticSearchIndex": {
             "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
             "Type": "String",
-            "Default": "lambda_bundle.zip"
+            "AllowedPattern":".+zip"
         },
         "lambdaElasticSearchIndexFunctionName": {
             "Description": "Lambda Function name used for indexing es",
@@ -37,19 +36,20 @@
             "Default": "indexElasticSearch"
         },
         "s3BucketNameWebApp": {
-            "Description": "The dns of the s3 bucket containing web app",
-            "Type": "String",
-            "Default": "webappbucket-name.s3.amazonaws.com"
+            "Description": "The dns of the s3 bucket containing web app, e.g webappbucket-name.s3.amazonaws.com",
+            "Type": "String"
+  
         },
         "s3BucketNameWebAppKey": {
-            "Description": "The key of web app within s3 bucket containing web app",
+            "Description": "The key of web app within s3 bucket containing web app, e.g /webapp",
             "Type": "String",
-            "Default": "/webapp"
+            "AllowedPattern":"^/.*"
+        
         },
         "s3OriginAccessComments": {
             "Description": "The S3 orgin access comments for cloudfront origin id",
             "Type": "String",
-            "Default": "RecommendationEngineWebApp"
+            "Default": "Recommendation EngineWeb App"
         }
     },
     "Mappings": {},

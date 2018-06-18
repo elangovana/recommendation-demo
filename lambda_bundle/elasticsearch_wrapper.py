@@ -41,10 +41,10 @@ def createIndex(esClient, indexName):
         exit(4)
 
 
-def indexBulkCsv(esClient, indexName, filepath, fieldnames, delimiter='|'):
+def indexBulkCsv(esClient, indexName, doc_type, filepath, fieldnames, delimiter='|'):
     with open(filepath) as f:
         reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter=delimiter)
-        helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30)
+        helpers.bulk(esClient, reader,  index=indexName, doc_type=doc_type, request_timeout=30)
 
 def search(esClient, indexName, query, size):
     res = esClient.search(index=indexName, body={"query": query, "size": size})

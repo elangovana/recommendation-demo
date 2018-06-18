@@ -5,6 +5,7 @@ from lambda_elasticsearch_handler import get_es_client
 def index_movies_csv(tmp_download_file, esClient):
     # Get ES Client
     indexName = "movies"
+    doc_type = "movies"
     createIndex(esClient, indexName)
     delimiter = '|'
     fieldnames = ["_id", "movietitle", "releasedate", "videoreleasedate",
@@ -12,7 +13,7 @@ def index_movies_csv(tmp_download_file, esClient):
                   "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                   "FilmNoir", "Horror", "Musical", "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
     try:
-        indexBulkCsv(esClient, indexName, tmp_download_file,
+        indexBulkCsv(esClient, indexName,doc_type, tmp_download_file,
                      fieldnames, delimiter)
     except Exception as e:
         print(e)

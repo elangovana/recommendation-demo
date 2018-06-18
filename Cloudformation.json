@@ -9,6 +9,11 @@
             "Default": "movies",
             "AllowedPattern": "[a-z0-9]+"
         },
+        "yourPublicIpCidr": {
+            "Description": "The IP address CIDR range that you want to allow access through Kibana",
+            "Type": "String",
+            "Default": "0.0.0.0"
+        },
         "s3BucketData": {
             "Description": "The name of the s3 bucket to use for the data",
             "Type": "String",
@@ -77,6 +82,77 @@
                 "AdvancedOptions": {
                     "rest.action.multi.allow_explicit_index": "true"
                 },
+                "AccessPolicies": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Resource": {
+                                "Fn::Join:": [
+                                    ":",
+                                    [
+                                        "arn:aws:es:",
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        {
+                                            "Ref": "elasticSearchDomainName"
+                                        },
+                                        "/*"
+                                    ]
+                                ]
+                            },
+                            "Principal": {
+                                "AWS": {
+                                    "Fn::Join:": [
+                                        ":",
+                                        [
+                                            "arn:aws:iam:",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            {
+                                                "Ref": "root"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "Action": [
+                                "es:ESHttpGet"
+                            ],
+                            "Effect": "Allow"
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            },
+                            "Action": "es:ESHttpGet",
+                            "Condition": {
+                                "IpAddress": {
+                                    "aws:SourceIp": [
+                                        {"Ref":"yourPublicIpCidr"}
+                                    ]
+                                }
+                            },
+                            "Resource": {
+                                "Fn::Join:": [
+                                    ":",
+                                    [
+                                        "arn:aws:es:",
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        {
+                                            "Ref": "elasticSearchDomainName"
+                                        },
+                                        "/*"
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                },
                 "Tags": [
                     {
                         "Key": "StackName",
@@ -85,7 +161,6 @@
                 ]
             }
         },
-        
         "lambdaElasticSearchIndex": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": "LambdaEsIndexRole",
@@ -197,7 +272,6 @@
                                                                     "Ref": "s3BucketData"
                                                                 },
                                                                 "*"
-                                                                
                                                             ]
                                                         ]
                                                     }
@@ -247,7 +321,6 @@
                                 "Ref": "AWS::StackName"
                             },
                             "LambdaExecutionRole_LambdaEsIndexRole"
-                           
                         ]
                     ]
                 }

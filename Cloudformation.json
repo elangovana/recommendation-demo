@@ -87,7 +87,7 @@
                     "Statement": [
                         {
                             "Resource": {
-                                "Fn::Join:": [
+                                "Fn::Join": [
                                     "",
                                     [
                                         "arn:aws:es::",
@@ -104,16 +104,15 @@
                             },
                             "Principal": {
                                 "AWS": {
-                                    "Fn::Join:": [
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "arn:aws:iam::",
                                             {
                                                 "Ref": "AWS::AccountId"
                                             },
-                                            {
-                                                "Ref": "root"
-                                            }
+                                            ":",
+                                            "root"
                                         ]
                                     ]
                                 }
@@ -132,12 +131,14 @@
                             "Condition": {
                                 "IpAddress": {
                                     "aws:SourceIp": [
-                                        {"Ref":"yourPublicIpCidr"}
+                                        {
+                                            "Ref": "yourPublicIpCidr"
+                                        }
                                     ]
                                 }
                             },
                             "Resource": {
-                                "Fn::Join:": [
+                                "Fn::Join": [
                                     "",
                                     [
                                         "arn:aws:es::",
@@ -299,17 +300,47 @@
                                         "es:ESHttpDelete",
                                         "es:ESHttpPut"
                                     ],
-                                    "Resource": {
-                                        "Fn::Join": [
-                                            "",
-                                            [
-                                                "arn:aws:es:::domain/",
-                                                {
-                                                    "Ref": "elasticSearchDomainName"
-                                                }
+                                    "Resource": [
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:es:",
+                                                    {
+                                                        "Ref": "AWS::Region"
+                                                    },
+                                                    ":",
+                                                    {
+                                                        "Ref": "AWS::AccountId"
+                                                    },
+                                                    ":domain/",
+                                                    {
+                                                        "Ref": "elasticSearchDomainName"
+                                                    },
+                                                    "/*"
+                                                ]
                                             ]
-                                        ]
-                                    }
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:es:",
+                                                    {
+                                                        "Ref": "AWS::Region"
+                                                    },
+                                                    ":",
+                                                    {
+                                                        "Ref": "AWS::AccountId"
+                                                    },
+                                                    ":domain/",
+                                                    {
+                                                        "Ref": "elasticSearchDomainName"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
                                 }
                             ]
                         }

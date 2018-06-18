@@ -7,7 +7,8 @@ import uuid
 import boto3
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
-from elasticsearch_wrapper import connectES, indexBulkCsv, createIndex, search
+from elasticsearch_movies import index_movies_csv, search_movies_by_title
+from elasticsearch_wrapper import connectES
 
 
 def index_handler(event, context):
@@ -19,25 +20,9 @@ def index_handler(event, context):
     tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
     s3_client.download_file(bucket, key, tmp_download_file)
 
-    # Get ES Client
+    #Index movies
     esClient = get_es_client()
-
-
-    indexName = "movies"
-    createIndex(esClient, indexName)
-
-    delimiter = '|'
-    fieldnames = ["_id", "movietitle", "releasedate", "videoreleasedate",
-                  "IMDbURL", "unknown", "Action", "Adventure", "Animation",
-                  "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
-                  "FilmNoir", "Horror", "Musical",  "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
-
-    try:
-        indexBulkCsv(esClient, indexName, tmp_download_file,
-                     fieldnames, delimiter)
-    except Exception as e:
-        print(e)
-        raise e
+    index_movies_csv(tmp_download_file, esClient)
 
 
 def get_es_client():
@@ -58,7 +43,6 @@ def get_es_client():
 def search_movies_handler(event, context):
     movie_search = event["queryStringParameters"]["movie"]
     esClient = get_es_client()
-    indexName = "movies"
-    query = {"match": {"movietitle": movie_search}}
+    return search_movies_by_title(esClient, movie_search)
 
-    return search(esClient, indexName, query, 5)
+

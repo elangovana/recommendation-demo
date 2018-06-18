@@ -1,13 +1,9 @@
 from __future__ import print_function
-from pprint import pprint
 
-import json
+import csv
+
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from elasticsearch import helpers
-import csv
-import urllib
-import json
-
 
 
 def connectES(esEndPoint, auth):
@@ -46,8 +42,6 @@ def createIndex(esClient, indexName):
 
 
 def indexBulkCsv(esClient, indexName, filepath, fieldnames, delimiter='|'):
- 
-    
     with open(filepath) as f:
         reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter=delimiter)
         helpers.bulk(esClient, reader,  index=indexName, doc_type="movies", request_timeout=30)

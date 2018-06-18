@@ -188,7 +188,7 @@
                     }
                 },
                 "FunctionName": "elasticsearch_index",
-                "Handler": "lambda_elasticsearch_handler.index_handler",
+                "Handler": "lambda_elasticsearch_handler.index_movies_handler",
                 "MemorySize": "128",
                 "ReservedConcurrentExecutions": 100,
                 "Role": {

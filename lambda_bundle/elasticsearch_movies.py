@@ -20,6 +20,22 @@ def index_movies_csv(tmp_download_file, esClient):
         raise e
 
 
+
+def index_users_csv(tmp_download_file, esClient):
+    # Get ES Client
+    indexName = "movies"
+    doc_type = "users"
+    createIndex(esClient, indexName)
+    delimiter = '|'
+    fieldnames = ["_id", "age" , "gender", "occupation", "zip code"]
+    try:
+        indexBulkCsv(esClient, indexName,doc_type, tmp_download_file,
+                     fieldnames, delimiter)
+    except Exception as e:
+        print(e)
+        raise e
+
+
 def search_movies_by_title(esClient, movie_search):
     indexName = "movies"
     query = {"match": {"movietitle": movie_search}}

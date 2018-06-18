@@ -7,11 +7,11 @@ import uuid
 import boto3
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
-from elasticsearch_movies import index_movies_csv, search_movies_by_title
+from elasticsearch_movies import index_movies_csv, search_movies_by_title, index_users_csv
 from elasticsearch_wrapper import connectES
 
 
-def index_handler(event, context):
+def index_movies_handler(event, context):
    # Get the object
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
@@ -24,6 +24,18 @@ def index_handler(event, context):
     esClient = get_es_client()
     index_movies_csv(tmp_download_file, esClient)
 
+def index_users_handler(event, context):
+   # Get the object
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+   # Download s3 object
+    s3_client = boto3.client('s3')
+    tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
+    s3_client.download_file(bucket, key, tmp_download_file)
+
+    #Index movies
+    esClient = get_es_client()
+    index_users_csv(tmp_download_file, esClient)
 
 def get_es_client():
     # es

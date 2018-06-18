@@ -20,13 +20,13 @@
         },
         "buildArtifactsS3Bucket": {
             "Description": "The s3 bucket where artifacts will be placed post build",
-            "Type": "String",
-            "Default": ""
+            "Type": "String"
+            
         },
         "buildArtifactsS3Key": {
             "Description": "The s3 key within the bucket where artifacts will be placed post build",
-            "Type": "String",
-            "Default": ""
+            "Type": "String"
+            
         }
     },
     "Mappings": {},

@@ -207,6 +207,49 @@
                 ]
             }
         },
+        "lambdaElasticSearchMovieSearch": {
+            "Type": "AWS::Lambda::Function",
+            "DependsOn": "LambdaEsIndexRole",
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "s3BucketLambdaCode"
+                    },
+                    "S3Key": {
+                        "Ref": "s3BucketLambdacodeElasticSearchIndex"
+                    }
+                },
+                "Description": "Invokes elastic search to search movie titles",
+                "Environment": {
+                    "Variables": {
+                        "elasticsearch_domain_name": {
+                            "Fn::GetAtt": [
+                                "ElasticsearchDomain",
+                                "DomainEndpoint"
+                            ]
+                        }
+                    }
+                },
+                "FunctionName": "elasticsearch_search_movies",
+                "Handler": "lambda_elasticsearch_handler.search_movies_handler",
+                "MemorySize": "128",
+                "ReservedConcurrentExecutions": 100,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "LambdaEsIndexRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python3.6",
+                "Timeout": 10,
+                "Tags": [
+                    {
+                        "Key": "StackName",
+                        "Value": "AWS::StackName"
+                    }
+                ]
+            }
+        },
         "LambdaEsIndexRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {

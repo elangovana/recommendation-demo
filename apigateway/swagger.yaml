@@ -1,10 +1,10 @@
----
 swagger: "2.0"
 info:
   version: "2018-06-18T07:21:11Z"
   title: "RecommendationsApi"
 host: "nw7dg8dnxa.execute-api.us-east-1.amazonaws.com"
-basePath: "/TestIgnor"
+basePath: 
+  'Fn::Sub': "/${apigatewayStage}"
 schemes:
 - "https"
 paths:
@@ -12,25 +12,47 @@ paths:
     post:
       produces:
       - "application/json"
+     
       responses:
         200:
           description: "200 response"
           schema:
             $ref: "#/definitions/Empty"
+      x-amazon-apigateway-integration:
+        uri: 
+          'Fn::Sub': "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${lambdaMovieRecommendationFunctionName}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws"
   /search:
     get:
       produces:
       - "application/json"
+      
       parameters:
       - name: "movie"
         in: "query"
-        required: true
+        required: false
         type: "string"
       responses:
         200:
           description: "200 response"
           schema:
             $ref: "#/definitions/Empty"
+      x-amazon-apigateway-integration:
+        uri: 
+          'Fn::Sub': "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${lambdaElasticSearchMovieFunctionName}/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws"
 definitions:
   Empty:
     type: "object"

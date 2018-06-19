@@ -1,0 +1,222 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  s3BucketLambdaCode:
+    Description: The name of the s3 bucket that holds the code
+    Type: String
+    AllowedPattern: "[A-Za-z0-9-]+"
+  s3BucketLambdacodeElasticSearchIndex:
+    Description: The name of the s3 key (zip file) within the bucket that holds the
+      code for elastic search index
+    Type: String
+    AllowedPattern: ".+zip"
+ 
+  s3BucketApiGatewaySwagger:
+    Description: The s3 path for api gateway swagger , e.g s3://mybuket/swagger.yaml
+    Type: String
+
+  lambdaElasticSearchIndexMovieFunctionName:
+    Description: Lambda Function name used for indexing es
+    Type: String
+    Default: indexElasticSearch
+  lambdaElasticSearchMovieFunctionName:
+    Description: Lambda Function for searching movies
+    Type: String
+    Default: searchmovies
+  lambdaMovieRecommendationFunctionName:
+    Description: Lambda Function for recommending movies
+    Type: String
+    Default: recomendmovies
+  apigatewayName:
+    Description: The name of the Apigateway  endpoint
+    Type: String
+  apigatewayStage:
+    Description: The name of the Apigateway stage
+    Type: String
+  sagemakerRecoomendationEndpointName:
+    Description: The name of the Sagemaker endpoint
+    Type: String
+Resources:
+  lambdaElasticSearchIndex:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaEsIndexRole
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: s3BucketLambdaCode
+        S3Key:
+          Ref: s3BucketLambdacodeElasticSearchIndex
+      Description: Invokes elastic search index
+      # Environment:
+      #   Variables:
+      #     elasticsearch_domain_name:
+      #       Fn::GetAtt:
+      #       - ElasticsearchDomain
+      #       - DomainEndpoint
+      FunctionName: 
+        Ref: lambdaElasticSearchIndexMovieFunctionName
+      Handler: lambda_elasticsearch_handler.index_movies_handler
+      MemorySize: '128'
+      ReservedConcurrentExecutions: 100
+      Role:
+        Fn::GetAtt:
+        - LambdaEsIndexRole
+        - Arn
+      Runtime: python3.6
+      Timeout: 10
+      Tags:
+      - Key: StackName
+        Value:
+          Ref: AWS::StackName
+  lambdaElasticSearchMovieSearch:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaEsIndexRole
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: s3BucketLambdaCode
+        S3Key:
+          Ref: s3BucketLambdacodeElasticSearchIndex
+      Description: Invokes elastic search to search movie titles
+      # Environment:
+      #   Variables:
+      #     elasticsearch_domain_name:
+      #       Fn::GetAtt:
+      #       - ElasticsearchDomain
+      #       - DomainEndpoint
+      FunctionName:
+        Ref: lambdaElasticSearchMovieFunctionName
+      Handler: lambda_elasticsearch_handler.search_movies_handler
+      MemorySize: '128'
+      ReservedConcurrentExecutions: 100
+      Role:
+        Fn::GetAtt:
+        - LambdaEsIndexRole
+        - Arn
+      Runtime: python3.6
+      Timeout: 10
+     
+      Tags:
+      - Key: StackName
+        Value:
+          Ref: AWS::StackName
+  lambdaSageMakerRecommendation:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaEsIndexRole
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: s3BucketLambdaCode
+        S3Key:
+          Ref: s3BucketLambdacodeElasticSearchIndex
+      Description: Invokes sagemaker endpoint to recommend a movie
+      Environment:
+        Variables:
+      #     elasticsearch_domain_name:
+      #       Fn::GetAtt:
+      #       - ElasticsearchDomain
+      #       - DomainEndpoint
+          sagemaker_endpoint:
+            Ref: sagemakerRecoomendationEndpointName
+           
+      FunctionName: 
+        Ref: lambdaMovieRecommendationFunctionName
+      Handler: lambda_sagemaker_handler.lambda_handler
+      MemorySize: '128'
+      ReservedConcurrentExecutions: 100
+      Role:
+        Fn::GetAtt:
+        - LambdaEsIndexRole
+        - Arn
+      Runtime: python3.6
+      Timeout: 10
+     
+      Tags:
+      - Key: StackName
+        Value:
+          Ref: AWS::StackName
+  LambdaEsIndexRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      # Policies:
+      # - PolicyName: S3GetCodeObjectPolicy
+      #   PolicyDocument:
+      #     Version: '2012-10-17'
+      #     Statement:
+      #     - Effect: Allow
+      #       Action:
+      #       - s3:GetObject
+      #       Resource:
+      #       - Fn::Join:
+      #         - ''
+      #         - - 'arn:aws:s3:::'
+      #           - Fn::Join:
+      #             - "/"
+      #             - - Ref: s3BucketLambdaCode
+      #               - Ref: s3BucketLambdacodeElasticSearchIndex
+      #       - Fn::Join:
+      #         - ''
+      #         - - 'arn:aws:s3:::'
+      #           - Fn::Join:
+      #             - "/"
+      #             - - Ref: s3BucketData
+      #               - "*"
+      # - PolicyName: ElasticSearchPolicy
+      #   PolicyDocument:
+      #     Version: '2012-10-17'
+      #     Statement:
+      #     - Effect: Allow
+      #       Action:
+      #       - es:ESHttpHead
+      #       - es:ESHttpPost
+      #       - es:ESHttpGet
+      #       - es:ESHttpDelete
+      #       - es:ESHttpPut
+      #       Resource:
+      #       - Fn::Join:
+      #         - ''
+      #         - - 'arn:aws:es:'
+      #           - Ref: AWS::Region
+      #           - ":"
+      #           - Ref: AWS::AccountId
+      #           - ":domain/"
+      #           - Ref: elasticSearchDomainName
+      #           - "/*"
+      #       - Fn::Join:
+      #         - ''
+      #         - - 'arn:aws:es:'
+      #           - Ref: AWS::Region
+      #           - ":"
+      #           - Ref: AWS::AccountId
+      #           - ":domain/"
+      #           - Ref: elasticSearchDomainName
+      RoleName:
+        Fn::Join:
+        - ''
+        - - Ref: AWS::StackName
+          - LambdaExecutionRole_LambdaEsIndexRole
+
+  apiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: mysapleAPI
+      StageName:
+        Ref: apigatewayStage
+      DefinitionBody:
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: 
+              'Fn::Sub': ${s3BucketApiGatewaySwagger}
+            

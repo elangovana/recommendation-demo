@@ -232,7 +232,8 @@ Resources:
   apiGateway:
     Type: AWS::Serverless::Api
     Properties:
-      Name: mysapleAPI
+      Name: 
+        Ref: apigatewayName
       StageName:
         Ref: apigatewayStage
       DefinitionBody:

@@ -1,6 +1,28 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Parameters:
+  elasticSearchDomainName:
+    Description: Elastic Search Movies Domain
+    Type: String
+    Default: movies
+    AllowedPattern: "[a-z0-9]+"
+  yourPublicIpCidr:
+    Description: The IP address CIDR range that you want to allow access through Kibana
+    Type: String
+  s3BucketData:
+    Description: The name of the s3 bucket to use for the data
+    Type: String
+  s3BucketNameWebApp:
+    Description: The dns of the s3 bucket containing web app, e.g webappbucket-name.s3.amazonaws.com
+    Type: String
+  s3BucketNameWebAppKey:
+    Description: The key of web app within s3 bucket containing web app, e.g /webapp
+    Type: String
+    AllowedPattern: "^/.*"
+  s3OriginAccessComments:
+    Description: The S3 orgin access comments for cloudfront origin id
+    Type: String
+    Default: Recommendation EngineWeb App
   s3BucketLambdaCode:
     Description: The name of the s3 bucket that holds the code
     Type: String
@@ -47,12 +69,12 @@ Resources:
         S3Key:
           Ref: s3BucketLambdacodeElasticSearchIndex
       Description: Invokes elastic search index
-      # Environment:
-      #   Variables:
-      #     elasticsearch_domain_name:
-      #       Fn::GetAtt:
-      #       - ElasticsearchDomain
-      #       - DomainEndpoint
+      Environment:
+        Variables:
+          elasticsearch_domain_name:
+            Fn::GetAtt:
+            - ElasticsearchDomain
+            - DomainEndpoint
       FunctionName: 
         Ref: lambdaElasticSearchIndexMovieFunctionName
       Handler: lambda_elasticsearch_handler.index_movies_handler
@@ -78,12 +100,12 @@ Resources:
         S3Key:
           Ref: s3BucketLambdacodeElasticSearchIndex
       Description: Invokes elastic search to search movie titles
-      # Environment:
-      #   Variables:
-      #     elasticsearch_domain_name:
-      #       Fn::GetAtt:
-      #       - ElasticsearchDomain
-      #       - DomainEndpoint
+      Environment:
+        Variables:
+          elasticsearch_domain_name:
+            Fn::GetAtt:
+            - ElasticsearchDomain
+            - DomainEndpoint
       FunctionName:
         Ref: lambdaElasticSearchMovieFunctionName
       Handler: lambda_elasticsearch_handler.search_movies_handler
@@ -112,10 +134,10 @@ Resources:
       Description: Invokes sagemaker endpoint to recommend a movie
       Environment:
         Variables:
-      #     elasticsearch_domain_name:
-      #       Fn::GetAtt:
-      #       - ElasticsearchDomain
-      #       - DomainEndpoint
+          elasticsearch_domain_name:
+            Fn::GetAtt:
+            - ElasticsearchDomain
+            - DomainEndpoint
           sagemaker_endpoint:
             Ref: sagemakerRecoomendationEndpointName
            
@@ -149,58 +171,58 @@ Resources:
           - sts:AssumeRole
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      # Policies:
-      # - PolicyName: S3GetCodeObjectPolicy
-      #   PolicyDocument:
-      #     Version: '2012-10-17'
-      #     Statement:
-      #     - Effect: Allow
-      #       Action:
-      #       - s3:GetObject
-      #       Resource:
-      #       - Fn::Join:
-      #         - ''
-      #         - - 'arn:aws:s3:::'
-      #           - Fn::Join:
-      #             - "/"
-      #             - - Ref: s3BucketLambdaCode
-      #               - Ref: s3BucketLambdacodeElasticSearchIndex
-      #       - Fn::Join:
-      #         - ''
-      #         - - 'arn:aws:s3:::'
-      #           - Fn::Join:
-      #             - "/"
-      #             - - Ref: s3BucketData
-      #               - "*"
-      # - PolicyName: ElasticSearchPolicy
-      #   PolicyDocument:
-      #     Version: '2012-10-17'
-      #     Statement:
-      #     - Effect: Allow
-      #       Action:
-      #       - es:ESHttpHead
-      #       - es:ESHttpPost
-      #       - es:ESHttpGet
-      #       - es:ESHttpDelete
-      #       - es:ESHttpPut
-      #       Resource:
-      #       - Fn::Join:
-      #         - ''
-      #         - - 'arn:aws:es:'
-      #           - Ref: AWS::Region
-      #           - ":"
-      #           - Ref: AWS::AccountId
-      #           - ":domain/"
-      #           - Ref: elasticSearchDomainName
-      #           - "/*"
-      #       - Fn::Join:
-      #         - ''
-      #         - - 'arn:aws:es:'
-      #           - Ref: AWS::Region
-      #           - ":"
-      #           - Ref: AWS::AccountId
-      #           - ":domain/"
-      #           - Ref: elasticSearchDomainName
+      Policies:
+      - PolicyName: S3GetCodeObjectPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            Resource:
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:s3:::'
+                - Fn::Join:
+                  - "/"
+                  - - Ref: s3BucketLambdaCode
+                    - Ref: s3BucketLambdacodeElasticSearchIndex
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:s3:::'
+                - Fn::Join:
+                  - "/"
+                  - - Ref: s3BucketData
+                    - "*"
+      - PolicyName: ElasticSearchPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - es:ESHttpHead
+            - es:ESHttpPost
+            - es:ESHttpGet
+            - es:ESHttpDelete
+            - es:ESHttpPut
+            Resource:
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:es:'
+                - Ref: AWS::Region
+                - ":"
+                - Ref: AWS::AccountId
+                - ":domain/"
+                - Ref: elasticSearchDomainName
+                - "/*"
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:es:'
+                - Ref: AWS::Region
+                - ":"
+                - Ref: AWS::AccountId
+                - ":domain/"
+                - Ref: elasticSearchDomainName
       RoleName:
         Fn::Join:
         - ''
@@ -220,3 +242,167 @@ Resources:
             Location: 
               'Fn::Sub': ${s3BucketApiGatewaySwagger}
             
+  ElasticsearchDomain:
+    Type: AWS::Elasticsearch::Domain
+    DependsOn: Cloudfront
+    Properties:
+      DomainName:
+        Ref: elasticSearchDomainName
+      ElasticsearchClusterConfig:
+        DedicatedMasterEnabled: 'true'
+        InstanceCount: '2'
+        ZoneAwarenessEnabled: 'true'
+        InstanceType: m4.large.elasticsearch
+        DedicatedMasterType: m4.large.elasticsearch
+        DedicatedMasterCount: '3'
+      EBSOptions:
+        EBSEnabled: true
+        Iops: 0
+        VolumeSize: 20
+        VolumeType: gp2
+      SnapshotOptions:
+        AutomatedSnapshotStartHour: '0'
+      AdvancedOptions:
+        rest.action.multi.allow_explicit_index: 'true'
+      AccessPolicies:
+        Version: '2012-10-17'
+        Statement:
+        - Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:es::'
+              - Ref: AWS::AccountId
+              - ":domain/"
+              - Ref: elasticSearchDomainName
+              - "/*"
+          Principal:
+            AWS:
+              Fn::Join:
+              - ''
+              - - 'arn:aws:iam::'
+                - Ref: AWS::AccountId
+                - ":"
+                - root
+          Action:
+          - es:ESHttpGet
+          Effect: Allow
+        - Effect: Allow
+          Principal:
+            AWS: "*"
+          Action: es:ESHttpGet
+          Condition:
+            IpAddress:
+              aws:SourceIp:
+              - Ref: yourPublicIpCidr
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:es::'
+              - Ref: AWS::AccountId
+              - ":domain/"
+              - Ref: elasticSearchDomainName
+              - "/*"
+      Tags:
+      - Key: StackName
+        Value: AWS::StackName
+  Cloudfront:
+    Type: AWS::CloudFront::Distribution
+    DependsOn:
+    - cloudfrontOriginAccess
+    - cloudfrontOriginAccessBucketPolicy
+    Properties:
+      DistributionConfig:
+        Aliases: []
+        CacheBehaviors: []
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - HEAD
+          - DELETE
+          - POST
+          - GET
+          - OPTIONS
+          - PUT
+          - PATCH
+          ForwardedValues:
+            QueryString: 'true'
+          TargetOriginId: webappcontent
+          ViewerProtocolPolicy: allow-all
+        DefaultRootObject: index.html
+        Enabled: 'True'
+        Origins:
+        - DomainName:
+            Ref: s3BucketNameWebApp
+          Id: webappcontent
+          OriginPath:
+            Ref: s3BucketNameWebAppKey
+          S3OriginConfig:
+            OriginAccessIdentity:
+              Fn::Join:
+              - ''
+              - - origin-access-identity/cloudfront/
+                - Ref: cloudfrontOriginAccess
+      Tags:
+      - Key: StackName
+        Value: AWS::StackName
+  cloudfrontOriginAccess:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment:
+          Ref: s3OriginAccessComments
+  cloudfrontOriginAccessBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: cloudfrontOriginAccess
+    Properties:
+      Bucket:
+        Fn::Select:
+        - 0
+        - Fn::Split:
+          - "."
+          - Ref: s3BucketNameWebApp
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            CanonicalUser:
+              Fn::GetAtt:
+              - cloudfrontOriginAccess
+              - S3CanonicalUserId
+          Action:
+          - s3:GetObject
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Fn::Select:
+                - 0
+                - Fn::Split:
+                  - "."
+                  - Ref: s3BucketNameWebApp
+              - Ref: s3BucketNameWebAppKey
+              - "/*"
+Outputs:
+  cloudFrontEndpoint:
+    Description: The domain name of cloudfront
+    Value:
+      Fn::GetAtt:
+      - Cloudfront
+      - DomainName
+    Export:
+      Name:
+        Fn::Join:
+        - ":"
+        - - Ref: AWS::StackName
+          - cloudFrontEndpoint
+  elasticSearchDomainName:
+    Description: The domain name for elastic search
+    Value:
+      Fn::GetAtt:
+      - ElasticsearchDomain
+      - DomainEndpoint
+    Export:
+      Name:
+        Fn::Join:
+        - ":"
+        - - Ref: AWS::StackName
+          - elasticSearchDomainName

@@ -19,22 +19,7 @@
             "Type": "String"
            
         },
-        "s3BucketLambdaCode": {
-            "Description": "The name of the s3 bucket that holds the code",
-            "Type": "String",
-        
-            "AllowedPattern": "[A-Za-z0-9-]+"
-        },
-        "s3BucketLambdacodeElasticSearchIndex": {
-            "Description": "The name of the s3 key (zip file) within the bucket that holds the code for elastic search index",
-            "Type": "String",
-            "AllowedPattern":".+zip"
-        },
-        "lambdaElasticSearchIndexFunctionName": {
-            "Description": "Lambda Function name used for indexing es",
-            "Type": "String",
-            "Default": "indexElasticSearch"
-        },
+       
         "s3BucketNameWebApp": {
             "Description": "The dns of the s3 bucket containing web app, e.g webappbucket-name.s3.amazonaws.com",
             "Type": "String"
@@ -164,244 +149,7 @@
                 ]
             }
         },
-        "lambdaElasticSearchIndex": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": "LambdaEsIndexRole",
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "s3BucketLambdaCode"
-                    },
-                    "S3Key": {
-                        "Ref": "s3BucketLambdacodeElasticSearchIndex"
-                    }
-                },
-                "Description": "Invokes elastic search index",
-                "Environment": {
-                    "Variables": {
-                        "elasticsearch_domain_name": {
-                            "Fn::GetAtt": [
-                                "ElasticsearchDomain",
-                                "DomainEndpoint"
-                            ]
-                        }
-                    }
-                },
-                "FunctionName": "elasticsearch_index",
-                "Handler": "lambda_elasticsearch_handler.index_movies_handler",
-                "MemorySize": "128",
-                "ReservedConcurrentExecutions": 100,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "LambdaEsIndexRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python3.6",
-                "Timeout": 10,
-                "Tags": [
-                    {
-                        "Key": "StackName",
-                        "Value": "AWS::StackName"
-                    }
-                ]
-            }
-        },
-        "lambdaElasticSearchMovieSearch": {
-            "Type": "AWS::Lambda::Function",
-            "DependsOn": "LambdaEsIndexRole",
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "s3BucketLambdaCode"
-                    },
-                    "S3Key": {
-                        "Ref": "s3BucketLambdacodeElasticSearchIndex"
-                    }
-                },
-                "Description": "Invokes elastic search to search movie titles",
-                "Environment": {
-                    "Variables": {
-                        "elasticsearch_domain_name": {
-                            "Fn::GetAtt": [
-                                "ElasticsearchDomain",
-                                "DomainEndpoint"
-                            ]
-                        }
-                    }
-                },
-                "FunctionName": "elasticsearch_search_movies",
-                "Handler": "lambda_elasticsearch_handler.search_movies_handler",
-                "MemorySize": "128",
-                "ReservedConcurrentExecutions": 100,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "LambdaEsIndexRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python3.6",
-                "Timeout": 10,
-                "Tags": [
-                    {
-                        "Key": "StackName",
-                        "Value": "AWS::StackName"
-                    }
-                ]
-            }
-        },
-        "LambdaEsIndexRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            },
-                            "Action": [
-                                "sts:AssumeRole"
-                            ]
-                        }
-                    ]
-                },
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-                ],
-                "Policies": [
-                    {
-                        "PolicyName": "S3GetCodeObjectPolicy",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "s3:GetObject"
-                                    ],
-                                    "Resource": [
-                                        {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "arn:aws:s3:::",
-                                                    {
-                                                        "Fn::Join": [
-                                                            "/",
-                                                            [
-                                                                {
-                                                                    "Ref": "s3BucketLambdaCode"
-                                                                },
-                                                                {
-                                                                    "Ref": "s3BucketLambdacodeElasticSearchIndex"
-                                                                }
-                                                            ]
-                                                        ]
-                                                    }
-                                                ]
-                                            ]
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "arn:aws:s3:::",
-                                                    {
-                                                        "Fn::Join": [
-                                                            "/",
-                                                            [
-                                                                {
-                                                                    "Ref": "s3BucketData"
-                                                                },
-                                                                "*"
-                                                            ]
-                                                        ]
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "PolicyName": "ElasticSearchPolicy",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Action": [
-                                        "es:ESHttpHead",
-                                        "es:ESHttpPost",
-                                        "es:ESHttpGet",
-                                        "es:ESHttpDelete",
-                                        "es:ESHttpPut"
-                                    ],
-                                    "Resource": [
-                                        {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "arn:aws:es:",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    ":",
-                                                    {
-                                                        "Ref": "AWS::AccountId"
-                                                    },
-                                                    ":domain/",
-                                                    {
-                                                        "Ref": "elasticSearchDomainName"
-                                                    },
-                                                    "/*"
-                                                ]
-                                            ]
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                "",
-                                                [
-                                                    "arn:aws:es:",
-                                                    {
-                                                        "Ref": "AWS::Region"
-                                                    },
-                                                    ":",
-                                                    {
-                                                        "Ref": "AWS::AccountId"
-                                                    },
-                                                    ":domain/",
-                                                    {
-                                                        "Ref": "elasticSearchDomainName"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "RoleName": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            {
-                                "Ref": "AWS::StackName"
-                            },
-                            "LambdaExecutionRole_LambdaEsIndexRole"
-                        ]
-                    ]
-                }
-            }
-        },
+     
         "Cloudfront": {
             "Type": "AWS::CloudFront::Distribution",
             "DependsOn": [
@@ -537,7 +285,7 @@
         }
     },
     "Outputs": {
-        "cloudFormationEndpoint": {
+        "cloudFrontEndpoint": {
             "Description": "The domain name of cloudfront",
             "Value": {
                 "Fn::GetAtt": [
@@ -553,7 +301,29 @@
                             {
                                 "Ref": "AWS::StackName"
                             },
-                            "cloudFormationEndpoint"
+                            "cloudFrontEndpoint"
+                        ]
+                    ]
+                }
+            }
+        },
+        "elasticSearchDomainName": {
+            "Description": "The domain name for elastic search",
+            "Value": {
+                "Fn::GetAtt": [
+                    "Cloudfront",
+                    "DomainName"
+                ]
+            },
+            "Export": {
+                "Name": {
+                    "Fn::Join": [
+                        ":",
+                        [
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            "cloudFrontEndpoint"
                         ]
                     ]
                 }

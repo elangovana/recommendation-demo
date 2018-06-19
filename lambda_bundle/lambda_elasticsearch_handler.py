@@ -7,9 +7,9 @@ import uuid
 import boto3
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
-from elasticsearch_movies import index_movies_csv, search_movies_by_title, index_users_csv
+from elasticsearch_movies import index_movies_csv, search_movies_by_title, index_users_csv, get_user_by_id
 from elasticsearch_wrapper import connectES
-
+import random
 
 def index_movies_handler(event, context):
    # Get the object
@@ -21,7 +21,7 @@ def index_movies_handler(event, context):
     s3_client.download_file(bucket, key, tmp_download_file)
 
     #Index movies
-    esClient = get_es_client()
+    esClient = _get_es_client()
     index_movies_csv(tmp_download_file, esClient)
 
 def index_users_handler(event, context):
@@ -34,10 +34,10 @@ def index_users_handler(event, context):
     s3_client.download_file(bucket, key, tmp_download_file)
 
     #Index movies
-    esClient = get_es_client()
+    esClient = _get_es_client()
     index_users_csv(tmp_download_file, esClient)
 
-def get_es_client():
+def _get_es_client():
     # es
     esdomain = os.environ['elasticsearch_domain_name']
     region = os.environ['AWS_REGION']
@@ -54,7 +54,15 @@ def get_es_client():
 
 def search_movies_handler(event, context):
     movie_search = event["queryStringParameters"]["movie"]
-    esClient = get_es_client()
+    esClient = _get_es_client()
     return search_movies_by_title(esClient, movie_search)
 
 
+
+def get_random_user_handler(event, context):
+    # TODO Too bad this is hardcoded!!. Needs to be aligned with the no:of features in the movies dataset, which is no_users + no_nmovies
+    nbUsers = 943
+    nbMovies = 1682
+    random_user_id = random.randint(1, nbUsers)
+    esClient = _get_es_client()
+    return get_user_by_id(esClient, random_user_id)

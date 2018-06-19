@@ -1,5 +1,6 @@
 from elasticsearch_wrapper import createIndex, indexBulkCsv, search
-from lambda_elasticsearch_handler import get_es_client
+
+doc_type_user = "users"
 
 
 def index_movies_csv(tmp_download_file, esClient):
@@ -13,23 +14,22 @@ def index_movies_csv(tmp_download_file, esClient):
                   "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                   "FilmNoir", "Horror", "Musical", "Mystery", "Romance", "SciFi", "Thriller", "War", "Western"]
     try:
-        indexBulkCsv(esClient, indexName,doc_type, tmp_download_file,
+        indexBulkCsv(esClient, indexName, doc_type, tmp_download_file,
                      fieldnames, delimiter)
     except Exception as e:
         print(e)
         raise e
 
 
-
 def index_users_csv(tmp_download_file, esClient):
     # Get ES Client
     indexName = "movies"
-    doc_type = "users"
+
     createIndex(esClient, indexName)
     delimiter = '|'
-    fieldnames = ["_id", "age" , "gender", "occupation", "zip code"]
+    fieldnames = ["_id", "age", "gender", "occupation", "zip code"]
     try:
-        indexBulkCsv(esClient, indexName,doc_type, tmp_download_file,
+        indexBulkCsv(esClient, indexName, doc_type_user, tmp_download_file,
                      fieldnames, delimiter)
     except Exception as e:
         print(e)
@@ -39,4 +39,13 @@ def index_users_csv(tmp_download_file, esClient):
 def search_movies_by_title(esClient, movie_search):
     indexName = "movies"
     query = {"match": {"movietitle": movie_search}}
+    return search(esClient, indexName, query, 5)
+
+
+def get_user_by_id(esClient, id):
+    indexName = "movies"
+    query = {"ids": {
+        "type": doc_type_user,
+        "values": [id]
+    }}
     return search(esClient, indexName, query, 5)

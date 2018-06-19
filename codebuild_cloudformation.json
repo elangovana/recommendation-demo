@@ -127,6 +127,24 @@
                                                     }
                                                 ]
                                             ]
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                "",
+                                                [
+                                                    "arn:aws:s3:::",
+                                                    {
+                                                        "Fn::Join": [
+                                                            "/",
+                                                            [
+                                                                {
+                                                                    "Ref": "buildArtifactsS3Bucket"
+                                                                }
+                                                            ]
+                                                        ]
+                                                    }
+                                                ]
+                                            ]
                                         }
                                     ]
                                 }

@@ -231,6 +231,7 @@ Resources:
 
   apiGateway:
     Type: AWS::Serverless::Api
+    DependsOn: apiGatewayRole
     Properties:
       Name: 
         Ref: apigatewayName
@@ -242,7 +243,50 @@ Resources:
           Parameters:
             Location: 
               'Fn::Sub': ${s3BucketApiGatewaySwagger}
-            
+      
+  apiGatewayRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - apigateway.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+      Policies:
+      - PolicyName: InvokeLambdaPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
+            Resource:
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:lambda:::function'
+                - Fn::Join:
+                  - ""
+                  - - Ref: lambdaElasticSearchMovieFunctionName
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:lambda:::function'
+                - Fn::Join:
+                  - ""
+                  - - Ref: lambdaMovieRecommendationFunctionName
+   
+      RoleName:
+        Fn::Join:
+        - ''
+        - - Ref: AWS::StackName
+          - _apGetwayRole
+
   ElasticsearchDomain:
     Type: AWS::Elasticsearch::Domain
     DependsOn: Cloudfront
@@ -305,7 +349,8 @@ Resources:
               - "/*"
       Tags:
       - Key: StackName
-        Value: AWS::StackName
+        Value: 
+          Ref: AWS::StackName
   Cloudfront:
     Type: AWS::CloudFront::Distribution
     DependsOn:
@@ -344,7 +389,8 @@ Resources:
                 - Ref: cloudfrontOriginAccess
       Tags:
       - Key: StackName
-        Value: AWS::StackName
+        Value: 
+          Ref: AWS::StackName
   cloudfrontOriginAccess:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties:

@@ -55,7 +55,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 1. Test search lambda
 ```json
 {
-  "queryStringParameters": {
+  "querystring": {
     "movie": "the"
   }
 }

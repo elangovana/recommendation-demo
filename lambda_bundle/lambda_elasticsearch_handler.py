@@ -53,7 +53,7 @@ def _get_es_client():
 
 
 def search_movies_handler(event, context):
-    movie_search = event["queryStringParameters"]["movie"]
+    movie_search = event["querystring"]["movie"]
     esClient = _get_es_client()
     return search_movies_by_title(esClient, movie_search)
 

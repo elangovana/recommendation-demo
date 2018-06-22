@@ -254,17 +254,35 @@ Resources:
               Service: 
                 - "apigateway.amazonaws.com"
             Action: "sts:AssumeRole"
-        Path: "/"
-        ManagedPolicyArns: 
-        - "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+      Path: "/"
+      ManagedPolicyArns: 
+      - "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
   apiGatewayAccount: 
     Type: "AWS::ApiGateway::Account"
+    DependsOn: apiGatewayCloudWatchRole
     Properties: 
       CloudWatchRoleArn: 
         "Fn::GetAtt": 
           - apiGatewayCloudWatchRole
           - Arn    
- 
+  apigatewayLambdaPermissionMovieSearch:
+    Type: 'AWS::Lambda::Permission'
+    DependsOn: 
+      - lambdaElasticSearchMovieSearch
+      - apiGateway
+    Properties:
+      FunctionName: 
+        'Fn::GetAtt': 
+          - lambdaElasticSearchMovieSearch
+          - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        'Fn::Join':
+          - ""
+          - - 'Fn::Sub': "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:"
+            - Ref: apiGateway
+            - /*
   ElasticsearchDomain:
     Type: AWS::Elasticsearch::Domain
     DependsOn: Cloudfront
@@ -431,3 +449,4 @@ Outputs:
         - ":"
         - - Ref: AWS::StackName
           - elasticSearchDomainName
+  

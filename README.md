@@ -16,7 +16,7 @@ aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 1. Download movies
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.item
-aws s3 cp u.item s3://<yourbucketData>/movies.csv
+aws s3 cp u.item s3://<yourbucketData>/movies.csv --metadata dataset_id=100KDS
 ```
 
 

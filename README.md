@@ -29,7 +29,9 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 
 
 # Load Elastic seach movies data
-1. Lambda ES index test, using sample data as 
+1. Make sure you that you have metadata "dataset_id" set on the key you want to index to either 100KDS, 20MDS to represent the 2 different data set
+
+2. Lambda ES index test, using sample data as 
 ```json
 {
   "Records": [

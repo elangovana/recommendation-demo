@@ -41,5 +41,5 @@ def get_user_by_id(esClient, id, dataset_id):
 
 
 def get_index(dataset_id):
-    indexName = "recommendation{}".format(dataset_id)
+    indexName = config.DataSet[dataset_id][config.INDEXNAME]
     return indexName

@@ -1,4 +1,4 @@
-DATASETID_100K = "hundredkds"
+DATASETID_100K = "100KDS"
 DOCTYPE_MOVIES ="movies"
 DOCTYPE_USERS="users"
 DOCTYPE_RATINGS="ratings"
@@ -6,9 +6,10 @@ CSVFIELD_NAMES="fieldnames"
 NB_USERS="nbusers"
 NB_MOVIES="nbMovies"
 DELIMITER ="Delimiter"
+INDEXNAME="index_name"
 
 DataSet = {
-    DATASETID_100K: {"name": "100K Data set", NB_USERS: 943, NB_MOVIES: 1682,DELIMITER:"|",
+    DATASETID_100K: {"name": "100K Data set", INDEXNAME:"hundredkds",NB_USERS: 943, NB_MOVIES: 1682,DELIMITER:"|",
                      DOCTYPE_MOVIES:{ CSVFIELD_NAMES: ["_id", "movietitle", "releasedate", "videoreleasedate",
                                             "IMDbURL", "unknown", "Action", "Adventure", "Animation",
                                             "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",

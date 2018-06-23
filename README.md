@@ -20,7 +20,7 @@ History and Context. ACM Transactions on Interactive Intelligent
 Systems (TiiS) 5, 4, Article 19 (December 2015), 19 pages.
 DOI=http://dx.doi.org/10.1145/2827872
 
-#### 100K Movie Dataset
+### 100K Movie Dataset
 1. Download movies
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.item

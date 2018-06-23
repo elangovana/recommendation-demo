@@ -1,4 +1,4 @@
-DATASETID_100K = "100KDS"
+DATASETID_100K = "hundredkds"
 DOCTYPE_MOVIES ="movies"
 DOCTYPE_USERS="users"
 DOCTYPE_RATINGS="ratings"

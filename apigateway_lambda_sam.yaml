@@ -45,6 +45,10 @@ Parameters:
     Description: Lambda Function for searching movies
     Type: String
     Default: searchmovies
+  lambdaSimulateUserFunctionName:
+    Description: Lambda Function for simulating users
+    Type: String
+    Default: simulateuser
   lambdaMovieRecommendationFunctionName:
     Description: Lambda Function for recommending movies
     Type: String
@@ -109,6 +113,38 @@ Resources:
       FunctionName:
         Ref: lambdaElasticSearchMovieFunctionName
       Handler: lambda_elasticsearch_handler.search_movies_handler
+      MemorySize: '128'
+      ReservedConcurrentExecutions: 100
+      Role:
+        Fn::GetAtt:
+        - LambdaEsIndexRole
+        - Arn
+      Runtime: python3.6
+      Timeout: 10
+     
+      Tags:
+      - Key: StackName
+        Value:
+          Ref: AWS::StackName
+  lambdaSimulateUser:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaEsIndexRole
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: s3BucketLambdaCode
+        S3Key:
+          Ref: s3BucketLambdacodeElasticSearchIndex
+      Description: Returns details of a random user
+      Environment:
+        Variables:
+          elasticsearch_domain_name:
+            Fn::GetAtt:
+            - ElasticsearchDomain
+            - DomainEndpoint
+      FunctionName:
+        Ref: lambdaSimulateUserFunctionName
+      Handler: lambda_elasticsearch_handler.get_random_user_handler
       MemorySize: '128'
       ReservedConcurrentExecutions: 100
       Role:
@@ -265,15 +301,15 @@ Resources:
         "Fn::GetAtt": 
           - apiGatewayCloudWatchRole
           - Arn    
-  apigatewayLambdaPermissionMovieSearch:
+  apigatewayLambdaPermissionSimulateUser:
     Type: 'AWS::Lambda::Permission'
     DependsOn: 
-      - lambdaElasticSearchMovieSearch
+      - lambdaSimulateUser
       - apiGateway
     Properties:
       FunctionName: 
         'Fn::GetAtt': 
-          - lambdaElasticSearchMovieSearch
+          - lambdaSimulateUser
           - Arn
       Action: 'lambda:InvokeFunction'
       Principal: apigateway.amazonaws.com

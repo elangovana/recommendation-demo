@@ -1,8 +1,9 @@
+---
 swagger: "2.0"
 info:
   version: "2018-06-18T07:21:11Z"
-  title: "RecommendationsApi"
-host: "1furb59bm8.execute-api.us-east-2.amazonaws.com"
+  title: "recommendApiOhio"
+host: "jusuwxtr72.execute-api.us-east-2.amazonaws.com"
 basePath: 
   'Fn::Sub': "/${apigatewayStage}"
 schemes:
@@ -18,7 +19,7 @@ paths:
           schema:
             $ref: "#/definitions/Empty"
       x-amazon-apigateway-integration:
-        uri: 
+         uri: 
           'Fn::Sub': "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${lambdaMovieRecommendationFunctionName}/invocations"
         responses:
           default:
@@ -27,14 +28,14 @@ paths:
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws"
-  /search:
+  /users/simulate:
     get:
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "movie"
+      - name: "dataset_id"
         in: "query"
         required: false
         type: "string"
@@ -45,7 +46,7 @@ paths:
             $ref: "#/definitions/Empty"
       x-amazon-apigateway-integration:
         uri: 
-          'Fn::Sub': "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${lambdaElasticSearchMovieFunctionName}/invocations"
+          'Fn::Sub': "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${lambdaSimulateUserFunctionName}/invocations"
         responses:
           default:
             statusCode: "200"

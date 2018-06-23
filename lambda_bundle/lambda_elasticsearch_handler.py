@@ -28,7 +28,7 @@ def index_handler(event, context):
     tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
     s3_client.download_file(bucket, key, tmp_download_file)
 
-    #Index movies
+    #Index
     esClient = _get_es_client()
     index_csv(tmp_download_file, esClient, dataset_id, type)
 
@@ -59,6 +59,7 @@ def search_movies_handler(event, context):
 
 def get_random_user_handler(event, context):
     dataset_id = event["querystring"]["dataset_id"]
-    random_user_id = random.randint(1, config.DataSet[dataset_id].nbusers)
+    nb_users = config.DataSet[dataset_id][config.NB_USERS]
+    random_user_id = random.randint(1, nb_users)
     esClient = _get_es_client()
     return get_user_by_id(esClient, random_user_id, dataset_id)

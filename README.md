@@ -12,7 +12,7 @@ SageMaker recommendation engine demo
 ```shell
 aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 ```
-# Public Datasets set up
+# Public Datasets
 We use the MovieLens dataset.
 
 F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens Datasets:

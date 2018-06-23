@@ -7,7 +7,7 @@ def index_csv(tmp_download_file, esClient, dataset_id, doc_type):
     # Get ES Client
     indexName = get_index(dataset_id)
     createIndex(esClient, indexName)
-    delimiter = '|'
+    delimiter =  config.DataSet[dataset_id][config.DELIMITER]
     fieldnames = config.DataSet[dataset_id][doc_type][config.CSVFIELD_NAMES]
     try:
         indexBulkCsv(esClient, indexName, doc_type, tmp_download_file,
@@ -30,7 +30,14 @@ def get_user_by_id(esClient, id, dataset_id):
         "type": config.DOCTYPE_USERS,
         "values": [id]
     }}
-    return search(esClient, indexName, query, 5)
+    user = search(esClient, indexName, query, 5)
+    # ratings_query= {"userid": {
+    #     "type": config.DOCTYPE_RATINGS,
+    #     "values": [user.]
+    # }}
+
+    result = {"user":user}
+    return result
 
 
 def get_index(dataset_id):

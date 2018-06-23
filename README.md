@@ -16,9 +16,13 @@ aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 1. Download movies
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.item
-aws s3 cp u.item s3://<yourbucketData>/movies.csv --metadata dataset_id=100KDS
+aws s3 cp u.item s3://<yourbucketData>/movies.csv --metadata dataset_id=100KDS,type=movies
 ```
-
+1. Download users
+```shell
+wget http://files.grouplens.org/datasets/movielens/ml-100k/u.user
+aws s3 cp u.user s3://<yourbucketData>/users.csv --metadata dataset_id=100KDS,type=users
+```
 
 # Run
 1. Deploy CFN

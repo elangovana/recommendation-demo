@@ -37,8 +37,8 @@ Parameters:
     Description: The s3 path for api gateway swagger , e.g s3://mybuket/swagger.yaml
     Type: String
 
-  lambdaElasticSearchIndexMovieFunctionName:
-    Description: Lambda Function name used for indexing es
+  lambdaElasticSearchIndexFunctionName:
+    Description: Lambda Function name used for indexing elastic search
     Type: String
     Default: indexElasticSearch
   lambdaElasticSearchMovieFunctionName:
@@ -76,8 +76,8 @@ Resources:
             - ElasticsearchDomain
             - DomainEndpoint
       FunctionName: 
-        Ref: lambdaElasticSearchIndexMovieFunctionName
-      Handler: lambda_elasticsearch_handler.index_movies_handler
+        Ref: lambdaElasticSearchIndexFunctionName
+      Handler: lambda_elasticsearch_handler.index_handler
       MemorySize: '128'
       ReservedConcurrentExecutions: 100
       Role:

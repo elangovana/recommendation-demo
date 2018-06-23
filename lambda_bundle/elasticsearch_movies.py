@@ -1,15 +1,14 @@
 from elasticsearch_wrapper import createIndex, indexBulkCsv, search
 
-doc_type_user = "users"
+
 import config
 
-def index_movies_csv(tmp_download_file, esClient, dataset_id):
+def index_csv(tmp_download_file, esClient, dataset_id, doc_type):
     # Get ES Client
     indexName = get_index(dataset_id)
-    doc_type = "movies"
     createIndex(esClient, indexName)
     delimiter = '|'
-    fieldnames = config.DataSet[dataset_id].moviedatasetfields
+    fieldnames = config.DataSet[dataset_id][doc_type][config.CSVFIELD_NAMES]
     try:
         indexBulkCsv(esClient, indexName, doc_type, tmp_download_file,
                      fieldnames, delimiter)
@@ -17,20 +16,6 @@ def index_movies_csv(tmp_download_file, esClient, dataset_id):
         print(e)
         raise e
 
-
-def index_users_csv(tmp_download_file, esClient, dataset_id):
-    # Get ES Client
-    indexName = get_index(dataset_id)
-
-    createIndex(esClient, indexName)
-    delimiter = '|'
-    fieldnames = config.DataSet[dataset_id].userdatasetfields
-    try:
-        indexBulkCsv(esClient, indexName, doc_type_user, tmp_download_file,
-                     fieldnames, delimiter)
-    except Exception as e:
-        print(e)
-        raise e
 
 
 def search_movies_by_title(esClient, movie_search, dataset_id):
@@ -42,12 +27,12 @@ def search_movies_by_title(esClient, movie_search, dataset_id):
 def get_user_by_id(esClient, id, dataset_id):
     indexName = get_index(dataset_id)
     query = {"ids": {
-        "type": doc_type_user,
+        "type": config.DOCTYPE_USERS,
         "values": [id]
     }}
     return search(esClient, indexName, query, 5)
 
 
 def get_index(dataset_id):
-    indexName = "movies_{}".format(dataset_id)
+    indexName = "recommendation_{}".format(dataset_id)
     return indexName

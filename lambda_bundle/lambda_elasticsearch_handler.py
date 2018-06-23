@@ -7,12 +7,12 @@ import uuid
 import boto3
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
-from elasticsearch_movies import index_movies_csv, search_movies_by_title, index_users_csv, get_user_by_id
+from elasticsearch_movies import  search_movies_by_title,  get_user_by_id, index_csv
 from elasticsearch_wrapper import connectES
 import random
 import config
 
-def index_movies_handler(event, context):
+def index_handler(event, context):
    # Get the object
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
@@ -21,6 +21,7 @@ def index_movies_handler(event, context):
     s3_client = boto3.client('s3')
     response = s3_client.head_object(Bucket=bucket, Key=key)
     dataset_id = response['Metadata']['dataset_id']
+    type = response['Metadata']['type']
 
 
    # Download s3 object
@@ -29,26 +30,9 @@ def index_movies_handler(event, context):
 
     #Index movies
     esClient = _get_es_client()
-    index_movies_csv(tmp_download_file, esClient, dataset_id)
-
-def index_users_handler(event, context):
-   # Get the object
-    bucket = event['Records'][0]['s3']['bucket']['name']
-    key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'])
+    index_csv(tmp_download_file, esClient, dataset_id, type)
 
 
-    # get Meta data
-    s3_client = boto3.client('s3')
-    response = s3_client.head_object(Bucket=bucket, Key=key)
-    dataset_id = response['Metadata']['dataset']
-
-   # Download s3 object
-    tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
-    s3_client.download_file(bucket, key, tmp_download_file)
-
-    #Index movies
-    esClient = _get_es_client()
-    index_users_csv(tmp_download_file, esClient,  dataset_id)
 
 def _get_es_client():
     # es

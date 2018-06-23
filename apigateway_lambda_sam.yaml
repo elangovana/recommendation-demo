@@ -327,12 +327,12 @@ Resources:
                 - ":"
                 - root
           Action:
-          - es:ESHttpGet
+          - es:ESHttp*
           Effect: Allow
         - Effect: Allow
           Principal:
             AWS: "*"
-          Action: es:ESHttpGet
+          Action: es:ESHttp*
           Condition:
             IpAddress:
               aws:SourceIp:
@@ -340,7 +340,9 @@ Resources:
           Resource:
             Fn::Join:
             - ''
-            - - 'arn:aws:es::'
+            - - 'arn:aws:es:'
+              - Ref: AWS::Region
+              - ":"
               - Ref: AWS::AccountId
               - ":domain/"
               - Ref: elasticSearchDomainName

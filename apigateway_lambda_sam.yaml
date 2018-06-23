@@ -320,7 +320,9 @@ Resources:
             AWS:
               Fn::Join:
               - ''
-              - - 'arn:aws:iam::'
+              - - 'arn:aws:iam:'
+                - Ref: AWS::Region
+                - ":"
                 - Ref: AWS::AccountId
                 - ":"
                 - root

@@ -1,4 +1,4 @@
-# recommendation-demo
+# Recommendation Demo
 SageMaker recommendation engine demo
 
 # Build

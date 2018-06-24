@@ -435,7 +435,9 @@ Resources:
             ForwardedValues:            
               QueryString: true
             PathPattern: /api/*       
-            TargetOriginId: api      
+            TargetOriginId: api  
+            MinTTL: 0
+            MaxTTL: 0    
             ViewerProtocolPolicy: allow-all
 
         DefaultCacheBehavior:

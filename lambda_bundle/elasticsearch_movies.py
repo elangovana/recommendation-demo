@@ -33,6 +33,7 @@ def get_user_by_id(esClient, id, dataset_id):
     user_search_result = search(esClient, indexName, query, 1)
     print(user_search_result)
     user = user_search_result["hits"]["hits"][0]["_source"]
+    print(user)
     # ratings_query= {"userid": {
     #     "type": config.DOCTYPE_RATINGS,
     #     "values": [user.]

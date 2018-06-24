@@ -1,4 +1,22 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Elastic search domain, Kibana and dataset
+      Parameters:
+      - elasticSearchDomainName
+      - yourPublicIpCidr
+      - s3BucketData
+    - Label:
+        default: Lambda functions set up
+      Parameters:
+      - s3BucketLambdaCode
+      - s3BucketLambdacodeKey
+      - lambdaElasticSearchIndexFunctionName
+      - lambdaElasticSearchMovieFunctionName
+      - lambdaSimulateUserFunctionName
+      - lambdaMovieRecommendationFunctionName
 Transform: AWS::Serverless-2016-10-31
 Parameters:
   elasticSearchDomainName:
@@ -62,24 +80,7 @@ Parameters:
   sagemakerRecoomendationEndpointName:
     Description: The name of the Sagemaker endpoint
     Type: String
-Metadata:
-  AWS::CloudFormation::Interface:
-    ParameterGroups:
-    - Label:
-        default: Elastic search domain, Kibana and dataset
-      Parameters:
-      - elasticSearchDomainName
-      - yourPublicIpCidr
-      - s3BucketData
-    - Label:
-        default: Lambda functions set up
-      Parameters:
-      - s3BucketLambdaCode
-      - s3BucketLambdacodeKey
-      - lambdaElasticSearchIndexFunctionName
-      - lambdaElasticSearchMovieFunctionName
-      - lambdaSimulateUserFunctionName
-      - lambdaMovieRecommendationFunctionName
+
 
 Resources:
   lambdaElasticSearchIndex:

@@ -430,16 +430,18 @@ Resources:
     Properties:
       DistributionConfig:
         Aliases: []
-        CacheBehaviors: []
+        CacheBehaviors: 
+          - AllowedMethods: ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]  
+            ForwardedValues:            
+              QueryString: true
+            PathPattern: /api/*       
+            TargetOriginId: api      
+            ViewerProtocolPolicy: allow-all
+
         DefaultCacheBehavior:
           AllowedMethods:
-          - HEAD
-          - DELETE
-          - POST
+          - HEAD     
           - GET
-          - OPTIONS
-          - PUT
-          - PATCH
           ForwardedValues:
             QueryString: 'true'
           TargetOriginId: webappcontent
@@ -458,6 +460,17 @@ Resources:
               - ''
               - - origin-access-identity/cloudfront/
                 - Ref: cloudfrontOriginAccess
+        - DomainName:
+            "Fn::Join":
+              - ""
+              - - Ref: apiGateway
+                - ".execute-api."
+                - Ref: AWS::Region
+                - ".amazonaws.com"
+          Id: api
+          OriginPath:
+            "Fn::Sub": /${apigatewayStage}
+
       Tags:
       - Key: StackName
         Value: 
@@ -524,4 +537,21 @@ Outputs:
         - ":"
         - - Ref: AWS::StackName
           - elasticSearchDomainName
+  apiGatewayEndPoint:
+    Description: The name of the api gateway end poiny
+    Value:
+      "Fn::Join":
+        - ""
+        - - Ref: apiGateway
+          - ".execute-api."
+          - Ref: AWS::Region
+          - ".amazonaws.com"
+          - "/"
+          - Ref: apigatewayStage
+    Export:
+      Name:
+        Fn::Join:
+        - ":"
+        - - Ref: AWS::StackName
+          - apiGatewayEndPoint
   

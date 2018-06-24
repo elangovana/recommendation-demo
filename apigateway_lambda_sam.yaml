@@ -17,7 +17,7 @@ Metadata:
       - lambdaElasticSearchMovieFunctionName
       - lambdaSimulateUserFunctionName
       - lambdaMovieRecommendationFunctionName
-      - sagemakerRecoomendationEndpointName
+      - lambdaEnvSagemakerRecommendEndpointName
     - Label:
         default: Apigateway set up
       Parameters:
@@ -93,7 +93,7 @@ Parameters:
   apigatewayStage:
     Description: The name of the Apigateway stage
     Type: String
-  sagemakerRecoomendationEndpointName:
+  lambdaEnvSagemakerRecommendEndpointName:
     Description: The name of an existing Sagemaker recommendation endpoint for the lambda to invoke
     Type: String
 
@@ -211,7 +211,7 @@ Resources:
             - ElasticsearchDomain
             - DomainEndpoint
           sagemaker_endpoint:
-            Ref: sagemakerRecoomendationEndpointName
+            Ref: lambdaEnvSagemakerRecommendEndpointName
            
       FunctionName: 
         Ref: lambdaMovieRecommendationFunctionName

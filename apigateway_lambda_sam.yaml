@@ -20,14 +20,19 @@ Metadata:
     - Label:
         default: Apigateway set up
       Parameters:
-      - s3Buckes3BucketApiGatewaySwagger
+      - s3BucketApiGatewaySwagger
       - apigatewayName
       - apigatewayStage
     - Label:
         default: Sagemaker set up
       Parameters:
       - sagemakerRecoomendationEndpointName
-
+    - Label:
+        default: Cloudfront set up
+      Parameters:
+      - s3BucketNameWebApp
+      - s3BucketNameWebAppKey
+      - s3OriginAccessComments
 
 Transform: AWS::Serverless-2016-10-31
 Parameters:

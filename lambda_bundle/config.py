@@ -1,4 +1,4 @@
-USER_FIELD_AGE = "age"
+
 DATASETID_100K = "100KDS"
 DOCTYPE_MOVIES ="movies"
 DOCTYPE_USERS="users"
@@ -9,8 +9,10 @@ NB_MOVIES="nbMovies"
 DELIMITER ="Delimiter"
 INDEXNAME="index_name"
 
+USER_FIELD_AGE = "age"
 USER_FIELD_GENDER = "gender"
 USER_FIELD_OCCUPATION = "occupation"
+
 DataSet = {
     DATASETID_100K: {"name": "100K Data set", INDEXNAME:"hundredkds",NB_USERS: 943, NB_MOVIES: 1682,DELIMITER:"|",
                      DOCTYPE_MOVIES:{ CSVFIELD_NAMES: ["_id", "movietitle", "releasedate", "videoreleasedate",

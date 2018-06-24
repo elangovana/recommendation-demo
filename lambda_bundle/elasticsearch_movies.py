@@ -40,9 +40,9 @@ def get_user_by_id(esClient, id, dataset_id):
     # }}
 
     result = {user: {
-        "age": user[config.USER_FIELD_AGE],
-        "occupation": user[config.USER_FIELD_OCCUPATION],
-        "gender": user[config.USER_FIELD_GENDER]
+        "age": user[config.USER_FIELD_AGE]
+       , "occupation": user[config.USER_FIELD_OCCUPATION]
+       #, "gender": user[config.USER_FIELD_GENDER]
     }}
     return result
 

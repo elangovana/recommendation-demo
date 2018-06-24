@@ -17,6 +17,18 @@ Metadata:
       - lambdaElasticSearchMovieFunctionName
       - lambdaSimulateUserFunctionName
       - lambdaMovieRecommendationFunctionName
+    - Label:
+        default: Apigateway set up
+      Parameters:
+      - s3Buckes3BucketApiGatewaySwagger
+      - apigatewayName
+      - apigatewayStage
+    - Label:
+        default: Sagemaker set up
+      Parameters:
+      - sagemakerRecoomendationEndpointName
+
+
 Transform: AWS::Serverless-2016-10-31
 Parameters:
   elasticSearchDomainName:
@@ -51,9 +63,7 @@ Parameters:
     Type: String
     AllowedPattern: ".+zip"
  
-  s3BucketApiGatewaySwagger:
-    Description: The s3 path for api gateway swagger , e.g s3://mybuket/swagger.yaml
-    Type: String
+ 
 
   lambdaElasticSearchIndexFunctionName:
     Description: Lambda Function name used for indexing elastic search
@@ -71,6 +81,9 @@ Parameters:
     Description: Lambda Function for recommending movies
     Type: String
     Default: recomendmovies
+  s3BucketApiGatewaySwagger:
+    Description: The s3 path for api gateway swagger , e.g s3://mybuket/swagger.yaml
+    Type: String
   apigatewayName:
     Description: The name of the Apigateway  endpoint
     Type: String
@@ -376,9 +389,7 @@ Resources:
             AWS:
               Fn::Join:
               - ''
-              - - 'arn:aws:iam:'
-                - Ref: AWS::Region
-                - ":"
+              - - 'arn:aws:iam::'
                 - Ref: AWS::AccountId
                 - ":"
                 - root

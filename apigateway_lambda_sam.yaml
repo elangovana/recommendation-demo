@@ -17,16 +17,14 @@ Metadata:
       - lambdaElasticSearchMovieFunctionName
       - lambdaSimulateUserFunctionName
       - lambdaMovieRecommendationFunctionName
+      - sagemakerRecoomendationEndpointName
     - Label:
         default: Apigateway set up
       Parameters:
       - s3BucketApiGatewaySwagger
       - apigatewayName
       - apigatewayStage
-    - Label:
-        default: Sagemaker set up
-      Parameters:
-      - sagemakerRecoomendationEndpointName
+   
     - Label:
         default: Cloudfront set up
       Parameters:
@@ -96,7 +94,7 @@ Parameters:
     Description: The name of the Apigateway stage
     Type: String
   sagemakerRecoomendationEndpointName:
-    Description: The name of the Sagemaker endpoint
+    Description: The name of an existing Sagemaker recommendation endpoint for the lambda to invoke
     Type: String
 
 

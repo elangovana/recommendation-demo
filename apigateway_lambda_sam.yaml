@@ -10,10 +10,10 @@ Parameters:
     Description: The IP address CIDR range that you want to allow access through Kibana
     Type: String
   s3BucketData:
-    Description: The name of the s3 bucket to use for the data
+    Description: The name of an existing s3 bucket that contains the movie datasets
     Type: String
   s3BucketNameWebApp:
-    Description: The dns of the s3 bucket containing web app, e.g webappbucket-name.s3.amazonaws.com
+    Description: The DNS of name of an existing s3 bucket containing web app, e.g webappbucket-name.s3.amazonaws.com
     Type: String
   s3BucketNameWebAppKey:
     Description: The key of web app within s3 bucket containing web app, e.g /webapp

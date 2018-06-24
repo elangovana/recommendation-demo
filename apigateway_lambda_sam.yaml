@@ -470,6 +470,8 @@ Resources:
           Id: api
           OriginPath:
             "Fn::Sub": /${apigatewayStage}
+          CustomOriginConfig:
+            OriginProtocolPolicy: https-only
 
       Tags:
       - Key: StackName

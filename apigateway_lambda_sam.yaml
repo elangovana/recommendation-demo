@@ -539,6 +539,22 @@ Outputs:
         - ":"
         - - Ref: AWS::StackName
           - elasticSearchDomainName
+  elasticSearchKibanaEndPoint:
+    Description: Kibana endpoint
+    Value:
+      Fn::Join:
+        - ""
+        - - Fn::GetAtt:
+              - ElasticsearchDomain
+              - DomainEndpoint
+          - "/_plugin/kibana/"
+      
+    Export:
+      Name:
+        Fn::Join:
+        - ":"
+        - - Ref: AWS::StackName
+          - elasticSearchKibanaEndPoint
   apiGatewayEndPoint:
     Description: The name of the api gateway end poiny
     Value:

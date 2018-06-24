@@ -50,15 +50,15 @@ def _get_es_client():
 
 
 def search_movies_handler(event, context):
-    movie_search = event["querystring"]["movie"]
-    dataset_id = event["querystring"]["dataset_id"]
+    movie_search = event["params"]["querystring"]["movie"]
+    dataset_id = event["params"]["querystring"]["dataset_id"]
     esClient = _get_es_client()
     return search_movies_by_title(esClient, movie_search, dataset_id)
 
 
 
 def get_random_user_handler(event, context):
-    dataset_id = event["querystring"]["dataset_id"]
+    dataset_id = event["params"]["querystring"]["dataset_id"]
     nb_users = config.DataSet[dataset_id][config.NB_USERS]
     random_user_id = random.randint(1, nb_users)
     esClient = _get_es_client()

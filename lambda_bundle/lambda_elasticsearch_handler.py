@@ -62,4 +62,6 @@ def get_random_user_handler(event, context):
     nb_users = config.DataSet[dataset_id][config.NB_USERS]
     random_user_id = random.randint(1, nb_users)
     esClient = _get_es_client()
-    return get_user_by_id(esClient, random_user_id, dataset_id)
+    result = get_user_by_id(esClient, random_user_id, dataset_id)
+
+    return result

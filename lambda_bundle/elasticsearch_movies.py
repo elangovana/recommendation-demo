@@ -30,13 +30,17 @@ def get_user_by_id(esClient, id, dataset_id):
         "type": config.DOCTYPE_USERS,
         "values": [id]
     }}
-    user = search(esClient, indexName, query, 5)
+    user = search(esClient, indexName, query, 1)["hits"]["hits"]["_source"]
     # ratings_query= {"userid": {
     #     "type": config.DOCTYPE_RATINGS,
     #     "values": [user.]
     # }}
 
-    result = {"user":user}
+    result = {user: {
+        "age": user[config.USER_FIELD_AGE],
+        "occupation": user[config.USER_FIELD_OCCUPATION],
+        "gender": user[config.USER_FIELD_GENDER]
+    }}
     return result
 
 

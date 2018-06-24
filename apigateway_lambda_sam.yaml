@@ -27,7 +27,7 @@ Parameters:
     Description: The name of the s3 bucket that holds the code
     Type: String
     AllowedPattern: "[A-Za-z0-9-]+"
-  s3BucketLambdacodeElasticSearchIndex:
+  s3BucketLambdacodeKey:
     Description: The name of the s3 key (zip file) within the bucket that holds the
       code for elastic search index
     Type: String
@@ -62,6 +62,25 @@ Parameters:
   sagemakerRecoomendationEndpointName:
     Description: The name of the Sagemaker endpoint
     Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Elastic search domain, Kibana and dataset
+      Parameters:
+      - elasticSearchDomainName
+      - yourPublicIpCidr
+      - s3BucketData
+    - Label:
+        default: Lambda functions set up
+      Parameters:
+      - s3BucketLambdaCode
+      - s3BucketLambdacodeKey
+      - lambdaElasticSearchIndexFunctionName
+      - lambdaElasticSearchMovieFunctionName
+      - lambdaSimulateUserFunctionName
+      - lambdaMovieRecommendationFunctionName
+
 Resources:
   lambdaElasticSearchIndex:
     Type: AWS::Lambda::Function
@@ -71,7 +90,7 @@ Resources:
         S3Bucket:
           Ref: s3BucketLambdaCode
         S3Key:
-          Ref: s3BucketLambdacodeElasticSearchIndex
+          Ref: s3BucketLambdacodeKey
       Description: Invokes elastic search index
       Environment:
         Variables:
@@ -102,7 +121,7 @@ Resources:
         S3Bucket:
           Ref: s3BucketLambdaCode
         S3Key:
-          Ref: s3BucketLambdacodeElasticSearchIndex
+          Ref: s3BucketLambdacodeKey
       Description: Invokes elastic search to search movie titles
       Environment:
         Variables:
@@ -134,7 +153,7 @@ Resources:
         S3Bucket:
           Ref: s3BucketLambdaCode
         S3Key:
-          Ref: s3BucketLambdacodeElasticSearchIndex
+          Ref: s3BucketLambdacodeKey
       Description: Returns details of a random user
       Environment:
         Variables:
@@ -166,7 +185,7 @@ Resources:
         S3Bucket:
           Ref: s3BucketLambdaCode
         S3Key:
-          Ref: s3BucketLambdacodeElasticSearchIndex
+          Ref: s3BucketLambdacodeKey
       Description: Invokes sagemaker endpoint to recommend a movie
       Environment:
         Variables:
@@ -222,7 +241,7 @@ Resources:
                 - Fn::Join:
                   - "/"
                   - - Ref: s3BucketLambdaCode
-                    - Ref: s3BucketLambdacodeElasticSearchIndex
+                    - Ref: s3BucketLambdacodeKey
             - Fn::Join:
               - ''
               - - 'arn:aws:s3:::'

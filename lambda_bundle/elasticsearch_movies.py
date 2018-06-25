@@ -25,48 +25,23 @@ def search_movies_by_title(esClient, movie_search, dataset_id):
 
 def get_user_by_id(esClient, userid, dataset_id):
     indexName = get_index(dataset_id)
-    query = {"ids": {
-        "type": config.DOCTYPE_USERS,
-        "values": [userid]
-    }}
-    user_search_result = search(esClient, indexName, query, {}, 1)
 
+    # get user
+    user_search_result = search_user_by_id(esClient, indexName, userid)
     userid = user_search_result["hits"]["hits"][0]["_id"]
     user = user_search_result["hits"]["hits"][0]["_source"]
 
-    # get ratings for user
-    ratings_query =  {
-        "bool": {
-            "must": [
-              { "match": { "_type":  config.DOCTYPE_RATINGS}}
-
-            ],
-             "must": [
-
-              { "match": { "userid": userid  }}
-            ]
-          }
-
-
-    }
-
-    rating_sort = {config.RATINGS_FIELD_RATING: "desc"}
-    search_ratings_result = search(esClient, indexName, ratings_query, rating_sort, 50)["hits"]["hits"]
-
+    # get ratings
+    search_ratings_result = search_ratings_by_userid(esClient, indexName, userid)
     movie_id_rating_dict = {}
     for h in search_ratings_result:
         movie_id_rating_dict[h["_source"][config.RATINGS_FIELD_MOVIEID]] = h["_source"][config.RATINGS_FIELD_RATING]
 
     # Get movies
-    movie_query = {
-        "ids": {
-            "type": config.DOCTYPE_MOVIES,
-            "values": list(movie_id_rating_dict.keys())
-        }
+    movie_ids = list(movie_id_rating_dict.keys())
+    search_movies_result = search_movies_by_ids(esClient, indexName, movie_ids)
 
-    }
-    search_movies_result = search(esClient, indexName, movie_query, {}, 50)["hits"]["hits"]
-
+    # combine rating and movie names
     ratings = []
     for moviehit in search_movies_result:
         ratings.append({
@@ -75,13 +50,10 @@ def get_user_by_id(esClient, userid, dataset_id):
             , "movie_id": moviehit["_id"]
             , "rating": movie_id_rating_dict[moviehit["_id"]]
         })
-        # ratings.append({
-        #     "movieid":hit["_source"][config.RATINGS_FIELD_MOVIEID]
-        #     ,"rating":hit["_source"][config.RATINGS_FIELD_RATING]
-        # })
+    # sort ratings by rating..
+    ratings.sort(key=lambda x: x.rating, reverse=True)
 
     # Consolidate results
-
     result = {"user": {
         "id": userid
         , "age": user[config.USER_FIELD_AGE]
@@ -91,6 +63,47 @@ def get_user_by_id(esClient, userid, dataset_id):
         "ratings": ratings}
 
     return result
+
+
+def search_user_by_id(esClient, indexName, userid):
+    query = {"ids": {
+        "type": config.DOCTYPE_USERS,
+        "values": [userid]
+    }}
+    user_search_result = search(esClient, indexName, query, {}, 1)
+    return user_search_result
+
+
+def search_ratings_by_userid(esClient, indexName, userid):
+    # get ratings for user
+    ratings_query = {
+        "bool": {
+            "must": [
+                {"match": {"_type": config.DOCTYPE_RATINGS}}
+
+            ],
+            "must": [
+
+                {"match": {"userid": userid}}
+            ]
+        }
+
+    }
+    rating_sort = {config.RATINGS_FIELD_RATING: "desc"}
+    search_ratings_result = search(esClient, indexName, ratings_query, rating_sort, 50)["hits"]["hits"]
+    return search_ratings_result
+
+
+def search_movies_by_ids(esClient, indexName, movie_ids):
+    movie_query = {
+        "ids": {
+            "type": config.DOCTYPE_MOVIES,
+            "values": movie_ids
+        }
+
+    }
+    search_movies_result = search(esClient, indexName, movie_query, {}, 50)["hits"]["hits"]
+    return search_movies_result
 
 
 def get_index(dataset_id):

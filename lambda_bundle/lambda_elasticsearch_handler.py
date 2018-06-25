@@ -59,7 +59,7 @@ def search_movies_handler(event, context):
 def get_datasets_handler(event, context):
     result = []
     for key in config.DataSet.keys():
-        result.append({"id": key, "description": config.DataSet[key]})
+        result.append({"id": key, "description": config.DataSet[key][config.DATASET_DESCRIPTION]})
     return result
 
 def get_random_user_handler(event, context):

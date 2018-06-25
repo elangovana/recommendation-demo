@@ -30,6 +30,11 @@ aws s3 cp u.item s3://<yourbucketData>/movies.csv --metadata dataset_id=100KDS,t
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.user
 aws s3 cp u.user s3://<yourbucketData>/users.csv --metadata dataset_id=100KDS,type=users
+
+3. Download ratings
+```shell
+wget http://files.grouplens.org/datasets/movielens/ml-100k/u.data
+aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,type=ratings
 ```
 
 # Run

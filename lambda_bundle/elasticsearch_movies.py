@@ -38,7 +38,7 @@ def get_user_by_id(esClient, id, dataset_id):
     #     "type": config.DOCTYPE_RATINGS,
     #     "values": [user.]
     # }}
-
+    print(user)
     result = {"user": {
         "id":user["_id"]
        , "age": user[config.USER_FIELD_AGE]

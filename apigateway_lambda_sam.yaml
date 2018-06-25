@@ -128,7 +128,7 @@ Resources:
         - LambdaEsIndexRole
         - Arn
       Runtime: python3.6
-      Timeout: 10
+      Timeout: 180
       Tags:
       - Key: StackName
         Value:

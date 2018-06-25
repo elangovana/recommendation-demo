@@ -15,36 +15,34 @@ def lambda_handler(event, context):
     user_id = event["params"]["querystring"]["userid"]
     dataset_id = event["params"]["querystring"]["dataset_id"]
 
-
     # Get movies that user has seen
     esclient = _get_es_client()
     indexName = config.DataSet[dataset_id][config.INDEXNAME]
-    seenMovieList =[ h["_source"][config.RATINGS_FIELD_MOVIEID] for h in search_ratings_by_userid(esclient,indexName , user_id)]
-
+    seenMovieList = [h["_source"][config.RATINGS_FIELD_MOVIEID] for h in
+                     search_ratings_by_userid(esclient, indexName, user_id)]
 
     # remove seen movies
-    newMovieList =  [ m for m in seenMovieList if not m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])]
-    matrix = convert_to_matrix(newMovieList, dataset_id)
+    newMovieList = [m for m in seenMovieList if not m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])]
+    matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
     recommeded_list = invoke_sagemaker(endpoint, matrix)
 
-    return  recommeded_list
+    return { "movies":matrix, "recommend":recommeded_list}
 
 
-def convert_to_matrix(moviesList, dataset_id):
+def convert_to_matrix(moviesList, dataset_id, user_id):
     nbUsers = config.DataSet[dataset_id][config.NB_USERS]
     nbMovies = config.DataSet[dataset_id][config.NB_MOVIES]
 
-    nbFeatures = nbUsers+nbMovies
+    nbFeatures = nbUsers + nbMovies
     nbRatings = len(moviesList)
     X = lil_matrix((nbRatings, nbFeatures), dtype='float32')
 
     line = 0
-    userId = 100
 
     for movieId in moviesList:
-        X[line, int(userId)-1] = 1
-        X[line, int(nbUsers)+int(movieId)-1] = 1
-        line = line+1
+        X[line, int(user_id) - 1] = 1
+        X[line, int(nbUsers) + int(movieId) - 1] = 1
+        line = line + 1
 
     return X
 

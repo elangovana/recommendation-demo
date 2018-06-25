@@ -56,6 +56,11 @@ def search_movies_handler(event, context):
     return search_movies_by_title(esClient, movie_search, dataset_id)
 
 
+def get_datasets_handler(event, context):
+    result = []
+    for key in config.DataSet.keys():
+        result.append({"id": key, "description": config.DataSet[key]})
+    return result
 
 def get_random_user_handler(event, context):
     dataset_id = event["params"]["querystring"]["dataset_id"]

@@ -46,7 +46,7 @@ def indexBulkCsv(esClient, indexName, doc_type, filepath, fieldnames, delimiter=
         reader = csv.DictReader(f,  fieldnames=fieldnames, delimiter=delimiter)
         helpers.bulk(esClient, reader,  index=indexName, doc_type=doc_type, request_timeout=30)
 
-def search(esClient, indexName, query, size):
-    res = esClient.search(index=indexName, body={"query": query, "size": size})
+def search(esClient, indexName, query, sort, size):
+    res = esClient.search(index=indexName, body={"query": query, "size": size, "sort":sort})
     return res
            

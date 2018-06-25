@@ -1,4 +1,4 @@
-
+RATINGS_FIELD_MOVIEID = "movieid"
 DATASETID_100K = "100KDS"
 DOCTYPE_MOVIES ="movies"
 DOCTYPE_USERS="users"
@@ -14,6 +14,8 @@ USER_FIELD_GENDER = "gender"
 USER_FIELD_OCCUPATION = "occupation"
 
 DATASET_DESCRIPTION = "name"
+RATINGS_FIELD_USERID = "userid"
+RATINGS_FIELD_RATING = "rating"
 DataSet = {
     DATASETID_100K: {DATASET_DESCRIPTION: "100K Data set", INDEXNAME: "hundredkds", NB_USERS: 943, NB_MOVIES: 1682,
                      DOCTYPE_MOVIES:{ CSVFIELD_NAMES: ["_id", "movietitle", "releasedate", "videoreleasedate",
@@ -22,7 +24,7 @@ DataSet = {
                                             "FilmNoir", "Horror", "Musical", "Mystery", "Romance", "SciFi", "Thriller",
                                             "War", "Western"], DELIMITER: "|" }
                      , DOCTYPE_USERS:{CSVFIELD_NAMES: ["_id", USER_FIELD_AGE,  USER_FIELD_GENDER, USER_FIELD_OCCUPATION, "zip code"],  DELIMITER: "|"}
-                     , DOCTYPE_RATINGS:{CSVFIELD_NAMES: ["userid" , "movieid" , "rating", "timestamp"],  DELIMITER: "\t"}
+                     , DOCTYPE_RATINGS:{CSVFIELD_NAMES: [RATINGS_FIELD_USERID, RATINGS_FIELD_MOVIEID, RATINGS_FIELD_RATING, "timestamp"], DELIMITER: "\t"}
 
                      }
 }

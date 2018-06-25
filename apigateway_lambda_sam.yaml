@@ -17,6 +17,7 @@ Metadata:
       - lambdaElasticSearchMovieFunctionName
       - lambdaSimulateUserFunctionName
       - lambdaMovieRecommendationFunctionName
+      - lambdaGetMovieDataSets      
       - lambdaEnvSagemakerRecommendEndpointName
     - Label:
         default: Apigateway set up
@@ -65,8 +66,6 @@ Parameters:
       code for elastic search index
     Type: String
     AllowedPattern: ".+zip"
- 
- 
 
   lambdaElasticSearchIndexFunctionName:
     Description: Lambda Function name used for indexing elastic search
@@ -84,6 +83,10 @@ Parameters:
     Description: Lambda Function for recommending movies
     Type: String
     Default: recomendmovies
+  lambdaGetMovieDataSets:
+    Description: Lambda Function for getting the list of movie datasets
+    Type: String
+    Default: getMoviedataSets
   s3BucketApiGatewaySwagger:
     Description: The s3 path for api gateway swagger , e.g s3://mybuket/swagger.yaml
     Type: String
@@ -181,6 +184,32 @@ Resources:
       FunctionName:
         Ref: lambdaSimulateUserFunctionName
       Handler: lambda_elasticsearch_handler.get_random_user_handler
+      MemorySize: '128'
+      ReservedConcurrentExecutions: 100
+      Role:
+        Fn::GetAtt:
+        - LambdaEsIndexRole
+        - Arn
+      Runtime: python3.6
+      Timeout: 10
+     
+      Tags:
+      - Key: StackName
+        Value:
+          Ref: AWS::StackName
+  lambdaGetMovieDataSets:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaEsIndexRole
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: s3BucketLambdaCode
+        S3Key:
+          Ref: s3BucketLambdacodeKey
+      Description: Returns details of available movie datasets
+      FunctionName:
+        Ref: lambdaGetMovieDataSets
+      Handler: lambda_elasticsearch_handler.get_datasets_handler
       MemorySize: '128'
       ReservedConcurrentExecutions: 100
       Role:
@@ -346,6 +375,24 @@ Resources:
       FunctionName: 
         'Fn::GetAtt': 
           - lambdaSimulateUser
+          - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        'Fn::Join':
+          - ""
+          - - 'Fn::Sub': "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:"
+            - Ref: apiGateway
+            - /*
+  apigatewayLambdaPermissionGetMovieDataSets:
+    Type: 'AWS::Lambda::Permission'
+    DependsOn: 
+      - lambdaGetMovieDataSets
+      - apiGateway
+    Properties:
+      FunctionName: 
+        'Fn::GetAtt': 
+          - lambdaGetMovieDataSets
           - Arn
       Action: 'lambda:InvokeFunction'
       Principal: apigateway.amazonaws.com

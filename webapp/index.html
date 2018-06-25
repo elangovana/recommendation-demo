@@ -62,35 +62,56 @@
         </button>
       </div>
     </div>
+   
   </header>
 
-  <main role="main">
 
+
+  <main role="main">
+  
     <section class="jumbotron text-center">
       <div class="container">
+         
 
-  
-        <div class="col-md-4">
-          <div class="card mb-4 box-shadow">
-            <button type="button" class="btn btn-sm btn-primary" onclick="getUser()">Simulate a user</button>
+        <div class="col-md-8">
+          <p>
+            <button type="button" class="btn  btn-primary" onclick="getUser()">Simulate a user</button>
+          </p>
+
+          <div class="card mb-8 box-shadow">
+
+
             <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
             <div class="card-body">
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is
-                a little bit longer.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Recommend a movie</button>
-
-                </div>
-               
-              </div>
+              <p class="card-text">
+                  <div class="col-sm-6 col-md-8">
+                      <h4>
+                          Anonymous User # </h4> <label id="userId">-</label>
+                      
+                      <p>
+                          <i class="glyphicon glyphicon-envelope"></i><label id="age">-</label>
+                          <br />
+                          <i class="glyphicon glyphicon-globe"></i><label id="occupation">-</label>
+                          <br />
+                          <i class="glyphicon glyphicon-globe"></i><label id="gender">-</label>
+                          <br />
+                      <!-- Split button -->
+                      <div class="btn-group">
+                          <button type="button" class="btn btn-primary">
+                              Recommed me a movie</button>
+                         
+                      </div>
+                  </div></p>
+          
             </div>
-         
+
+          </div>
+          <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet,
+            but not too short so folks don't simply skip over it entirely.</p>
+
         </div>
-        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but
-          not too short so folks don't simply skip over it entirely.</p>
+
        
-      </div>
     </section>
 
     <div class="album py-5 bg-light">
@@ -264,22 +285,27 @@
   <!-- Bootstrap core JavaScript
     ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.2.1.min.js"><\/script>')</script>
   <script src="assets/js/vendor/popper.min.js"></script>
   <script src="dist/js/bootstrap.min.js"></script>
   <script src="assets/js/vendor/holder.min.js"></script>
   <script>
-  function getUser(){
-    success = function(data){
-        console.log(data)
+    function getUser() {
+      success = function (data) {
+        $("#userId").text(data.user.id);
+        $("#occupation").text(data.user.occupation);
+        $("#gender").text(data.user.gender);
+        console.log(data);
+      }
+      $.ajax({
+        dataType: "json",
+        url: "/api/users/simulate?dataset_id=100KDS",
+        success: success
+      });
+      
+
     }
-    $.ajax({
-      dataType: "json",
-      url: "/api/users/simulate?dataset_id=100KDS",
-      success: success
-    });
-  }
   </script>
 </body>
 

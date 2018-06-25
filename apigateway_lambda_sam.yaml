@@ -402,6 +402,24 @@ Resources:
           - - 'Fn::Sub': "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:"
             - Ref: apiGateway
             - /*
+  apigatewayLambdaPermissionSageMakerRecommendationn:
+    Type: 'AWS::Lambda::Permission'
+    DependsOn: 
+      - lambdaSageMakerRecommendation
+      - apiGateway
+    Properties:
+      FunctionName: 
+        'Fn::GetAtt': 
+          - lambdaSageMakerRecommendation
+          - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        'Fn::Join':
+          - ""
+          - - 'Fn::Sub': "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:"
+            - Ref: apiGateway
+            - /*
   ElasticsearchDomain:
     Type: AWS::Elasticsearch::Domain
     

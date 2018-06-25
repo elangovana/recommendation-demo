@@ -48,7 +48,7 @@ def get_user_by_id(esClient, userid, dataset_id):
 
     movie_id_rating_dict = {}
     for h in search_ratings_result:
-        movie_id_rating_dict[h["_source"][config.RATINGS_FIELD_MOVIEID]] = h["_source"][config.RATINGS_FIELD_MOVIEID]
+        movie_id_rating_dict[h["_source"][config.RATINGS_FIELD_MOVIEID]] = h["_source"][config.RATINGS_FIELD_RATING]
 
     # Get movies
     movie_query = {

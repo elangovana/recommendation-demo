@@ -35,14 +35,21 @@ def get_user_by_id(esClient, userid, dataset_id):
     user = user_search_result["hits"]["hits"][0]["_source"]
 
     # get ratings for user
-    ratings_query = {
+    ratings_query =  {
         "bool": {
-            "should": [
-                {"match": {"_type": config.DOCTYPE_RATINGS}},
-                {"match": {"userid": userid}}
+            "must": [
+              { "match": { "_type":  config.DOCTYPE_RATINGS}}
+
+            ],
+             "must": [
+
+              { "match": { "userid": userid  }}
             ]
-        }
+          }
+
+
     }
+
     rating_sort = {config.RATINGS_FIELD_RATING: "desc"}
     search_ratings_result = search(esClient, indexName, ratings_query, rating_sort, 50)["hits"]["hits"]
 

@@ -8,7 +8,7 @@
   <meta name="author" content="">
   <link rel="icon" href="./favicon.ico">
 
-  <title>Album example for Bootstrap</title>
+  <title>Movie Recommendation</title>
 
   <!-- Bootstrap core CSS -->
   <link href="dist/css/bootstrap.min.css" rel="stylesheet">
@@ -20,11 +20,11 @@
 <body>
 
   <header>
-    <div class="collapse bg-dark" id="navbarHeader">
+    <div class=" bg-dark" id="navbarHeader">
       <div class="container">
         <div class="row">
           <div class="col-sm-8 col-md-7 py-4">
-            <h4 class="text-white">About</h4>
+            <h4 class="text-white">Movie Recommender</h4>
             <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences
               long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or
               contact information.</p>
@@ -46,22 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="navbar navbar-dark bg-dark box-shadow">
-      <div class="container d-flex justify-content-between">
-        <a href="#" class="navbar-brand d-flex align-items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-          </svg>
-          <strong>Album</strong>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader"
-          aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </div>
+   
    
   </header>
 
@@ -174,7 +159,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.js"></script>
   <script id="movie_rating_template" type="text/template">
     <tr>
-                  <th scope="row">{{movie_id}}</th>
+                  <th scope="row">{{id}}</th>
                   <td>{{movie_title}}</td>
                   <td>{{movie_release_date}}</td>
                   <td>{{rating}}</td>
@@ -191,8 +176,11 @@
         $("#tbody_movies_ratings").html("");
         var template = $("#movie_rating_template").html();
         console.log(data.ratings)
+        var i =1;
         data.ratings.forEach(rating => {
-            var html = Mustache.render(template, rating);
+            data = {"id" :i, "movie_release_date": rating.movie_release_date, "movie_title": rating.movie_title, "rating":rating.rating}
+            i = i+1;
+            var html = Mustache.render(template, data);
             $("#tbody_movies_ratings").append(html);
         });
        

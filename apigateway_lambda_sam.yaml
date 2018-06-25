@@ -324,6 +324,32 @@ Resources:
                 - Ref: AWS::AccountId
                 - ":domain/"
                 - Ref: elasticSearchDomainName
+      - PolicyName: InvokeSagemakerEndpoint
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - sagemaker:InvokeEndpoint
+            Resource:
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:es:'
+                - Ref: AWS::sagemaker
+                - ":"
+                - Ref: AWS::AccountId
+                - ":endpoint/"
+                - Ref: lambdaEnvSagemakerRecommendEndpointName
+                - "/*"
+            - Fn::Join:
+              - ''
+              - - 'arn:aws:es:'
+                - Ref: AWS::sagemaker
+                - ":"
+                - Ref: AWS::AccountId
+                - ":endpoint/"
+                - Ref: lambdaEnvSagemakerRecommendEndpointName
+           
       RoleName:
         Fn::Join:
         - ''

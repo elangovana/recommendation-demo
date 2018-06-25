@@ -16,9 +16,11 @@ USER_FIELD_OCCUPATION = "occupation"
 DATASET_DESCRIPTION = "name"
 RATINGS_FIELD_USERID = "userid"
 RATINGS_FIELD_RATING = "rating"
+MOVIES_FIELD_TITLE = "movietitle"
+MOVIES_FIELD_RELEASEDATE = "releasedate"
 DataSet = {
     DATASETID_100K: {DATASET_DESCRIPTION: "100K Data set", INDEXNAME: "hundredkds", NB_USERS: 943, NB_MOVIES: 1682,
-                     DOCTYPE_MOVIES:{ CSVFIELD_NAMES: ["_id", "movietitle", "releasedate", "videoreleasedate",
+                     DOCTYPE_MOVIES:{ CSVFIELD_NAMES: ["_id", MOVIES_FIELD_TITLE, MOVIES_FIELD_RELEASEDATE, "videoreleasedate",
                                             "IMDbURL", "unknown", "Action", "Adventure", "Animation",
                                             "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",
                                             "FilmNoir", "Horror", "Musical", "Mystery", "Romance", "SciFi", "Thriller",

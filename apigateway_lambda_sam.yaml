@@ -17,7 +17,7 @@ Metadata:
       - lambdaElasticSearchMovieFunctionName
       - lambdaSimulateUserFunctionName
       - lambdaMovieRecommendationFunctionName
-      - lambdaGetMovieDataSets      
+      - lambdaGetMovieDataSetsFunctionName      
       - lambdaEnvSagemakerRecommendEndpointName
     - Label:
         default: Apigateway set up
@@ -83,7 +83,7 @@ Parameters:
     Description: Lambda Function for recommending movies
     Type: String
     Default: recomendmovies
-  lambdaGetMovieDataSets:
+  lambdaGetMovieDataSetsFunctionName:
     Description: Lambda Function for getting the list of movie datasets
     Type: String
     Default: getMoviedataSets
@@ -208,7 +208,7 @@ Resources:
           Ref: s3BucketLambdacodeKey
       Description: Returns details of available movie datasets
       FunctionName:
-        Ref: lambdaGetMovieDataSets
+        Ref: lambdaGetMovieDataSetsFunctionName
       Handler: lambda_elasticsearch_handler.get_datasets_handler
       MemorySize: '128'
       ReservedConcurrentExecutions: 100

@@ -85,19 +85,18 @@
             <div class="card-body">
               <p class="card-text">
                   <div class="col-sm-6 col-md-8">
-                      <h4>
-                          Anonymous User # </h4> <label id="userId">-</label>
+                      <h4> User # <label id="userId">-</label> </h4>
                       
                       <p>
-                          <i class="glyphicon glyphicon-envelope"></i><label id="age">-</label>
+                          <label id="age">-</label>
                           <br />
-                          <i class="glyphicon glyphicon-globe"></i><label id="occupation">-</label>
+                        <label id="occupation">-</label>
                           <br />
-                          <i class="glyphicon glyphicon-globe"></i><label id="gender">-</label>
+                         <label id="gender">-</label>
                           <br />
                       <!-- Split button -->
                       <div class="btn-group">
-                          <button type="button" class="btn btn-primary">
+                          <button type="button" class="btn btn-primary text-center">
                               Recommed me a movie</button>
                          
                       </div>
@@ -294,6 +293,7 @@
     function getUser() {
       success = function (data) {
         $("#userId").text(data.user.id);
+        $("#age").text(data.user.age);
         $("#occupation").text(data.user.occupation);
         $("#gender").text(data.user.gender);
         console.log(data);

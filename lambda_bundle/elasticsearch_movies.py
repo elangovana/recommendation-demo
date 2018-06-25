@@ -51,7 +51,7 @@ def get_user_by_id(esClient, userid, dataset_id):
             , "rating": movie_id_rating_dict[moviehit["_id"]]
         })
     # sort ratings by rating..
-    ratings.sort(key=lambda x: x.rating, reverse=True)
+    ratings.sort(key=lambda x: x["rating"], reverse=True)
 
     # Consolidate results
     result = {"user": {

@@ -5,7 +5,7 @@ import json
 import os
 
 import config
-from elasticsearch_movies import search_ratings_by_userid
+from elasticsearch_movies import search_ratings_by_userid, search_movies_by_ids
 from elasticsearch_wrapper import connectES
 
 
@@ -25,14 +25,30 @@ def lambda_handler(event, context):
     newMovieList = [m for m in seenMovieList if not m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])]
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
 
-    recommeded_list = invoke_sagemaker(endpoint, matrix)
-    print(recommeded_list)
+    #predictions for unseen movies
+    recommeded_list = invoke_sagemaker(endpoint, matrix)["predictions"]
+
+
+    #get movie details
+    movies_search = search_movies_by_ids(esclient, indexName, newMovieList)
+    movie_dict = {}
+    for m in movies_search:
+        movie_dict[m["_id"]] = {"movie_title" : m["_source"][config.MOVIES_FIELD_TITLE],
+                                "movie_release_date":m["_source"][config.MOVIES_FIELD_RELEASEDATE] }
+
+    #consolidate results
     result = []
     for i in range(0, len(newMovieList)):
-        #if recommeded_list[i] == 0 : continue
-        result.append({"movieid":newMovieList[i],"like":recommeded_list[i], "score": recommeded_list[i]})
+        if int(recommeded_list[i]["predicted_label"]) == 0 : continue
+        result.append({"movieid":newMovieList[i],
+                       "movie_details":movie_dict[newMovieList[i]],
+                       "like":recommeded_list[i]["predicted_label"],
+                       "score": recommeded_list[i]["score"]})
 
-    return recommeded_list
+    #sort by prediction score
+    result.sort(key=lambda x: x["score"], reverse=True)
+
+    return result
 
 
 def convert_to_matrix(moviesList, dataset_id, user_id):

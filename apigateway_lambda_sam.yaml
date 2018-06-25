@@ -482,7 +482,7 @@ Resources:
             ForwardedValues:            
               QueryString: true
             PathPattern: /api/*   
-            CachedMethods: []    
+            
             TargetOriginId: api  
              
             ViewerProtocolPolicy: allow-all

@@ -1,23 +1,39 @@
 import boto3
+from aws_requests_auth.aws_auth import AWSRequestsAuth
 from scipy.sparse import lil_matrix
 import json
 import os
+
+import config
+from elasticsearch_movies import search_ratings_by_userid
+from elasticsearch_wrapper import connectES
 
 
 def lambda_handler(event, context):
     # TODO implement
     endpoint = os.environ['sagemaker_endpoint']
-    # [1164, 1194, 1223, 1224, 1246, 1311, 1347, 1413, 1538, 1771]
-    moviesList = event["body"]
-    matrix = convert_to_matrix(moviesList)
-    return invoke_sagemaker(endpoint, matrix)
+    user_id = event["params"]["querystring"]["userid"]
+    dataset_id = event["params"]["querystring"]["dataset_id"]
 
 
-def convert_to_matrix(moviesList):
-    # TODO Too bad this is hardcoded!!. Needs to be aligned with the no:of features in the movies dataset, which is no_users + no_nmovies
-    nbUsers = 943
-    nbMovies = 1682
-    # TODO Validate that the movie list must be within the movies Range.
+    # Get movies that user has seen
+    esclient = _get_es_client()
+    indexName = config.DataSet[dataset_id][config.INDEXNAME]
+    seenMovieList =[ h["_source"][config.RATINGS_FIELD_MOVIEID] for h in search_ratings_by_userid(esclient,indexName , user_id)]
+
+
+    # remove seen movies
+    newMovieList =  [ m for m in seenMovieList if not m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])]
+    matrix = convert_to_matrix(newMovieList, dataset_id)
+    recommeded_list = invoke_sagemaker(endpoint, matrix)
+
+    return  recommeded_list
+
+
+def convert_to_matrix(moviesList, dataset_id):
+    nbUsers = config.DataSet[dataset_id][config.NB_USERS]
+    nbMovies = config.DataSet[dataset_id][config.NB_MOVIES]
+
     nbFeatures = nbUsers+nbMovies
     nbRatings = len(moviesList)
     X = lil_matrix((nbRatings, nbFeatures), dtype='float32')
@@ -51,3 +67,18 @@ def fm_serializer(data):
     for row in data:
         js['instances'].append({'features': row.tolist()})
     return json.dumps(js)
+
+
+def _get_es_client():
+    # es
+    esdomain = os.environ['elasticsearch_domain_name']
+    region = os.environ['AWS_REGION']
+    print(region)
+    auth = AWSRequestsAuth(aws_access_key=os.environ['AWS_ACCESS_KEY_ID'],
+                           aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+                           aws_token=os.environ['AWS_SESSION_TOKEN'],
+                           aws_host=esdomain,
+                           aws_region=region,
+                           aws_service='es')
+    esClient = connectES(esdomain, auth)
+    return esClient

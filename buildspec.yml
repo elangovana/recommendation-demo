@@ -19,7 +19,6 @@ phases:
       - cd lambda_bundle  && zip -r ../buildoutput/lambda_bundle.zip .  && cd ..
       - echo packaging webapp
       - cd webapp  && zip -r ../buildoutput/webapp.zip .  && cd .. 
-      - cp Cloudformation.json  buildoutput
       - cp apigateway_lambda_sam.yaml  buildoutput
       - cp apigateway/swagger.yaml  buildoutput
 artifacts:

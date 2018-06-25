@@ -29,8 +29,8 @@ def lambda_handler(event, context):
 
     result = []
     for i in range(0, len(newMovieList)):
-        if recommeded_list[i][1] == 0 : continue
-        result.append({"movieid":newMovieList[i],"like":recommeded_list[i][1], "score": recommeded_list[i][0]})
+        #if recommeded_list[i] == 0 : continue
+        result.append({"movieid":newMovieList[i],"like":recommeded_list[i], "score": recommeded_list[i]})
 
     return result
 

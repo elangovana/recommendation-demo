@@ -54,7 +54,7 @@ def get_user_by_id(esClient, userid, dataset_id):
     movie_query = {
         "ids": {
             "type": config.DOCTYPE_MOVIES,
-            "values": movie_id_rating_dict.keys()
+            "values": list(movie_id_rating_dict.keys())
         }
 
     }

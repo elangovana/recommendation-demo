@@ -26,7 +26,8 @@ def lambda_handler(event, context):
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
 
     #predictions for unseen movies
-    recommeded_list = invoke_sagemaker(endpoint, matrix)["predictions"]
+    recommeded_list = invoke_sagemaker(endpoint, matrix)[1]
+    recommeded_list = recommeded_list["predictions"]
 
 
     #get movie details

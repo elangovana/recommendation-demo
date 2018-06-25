@@ -32,6 +32,7 @@ def get_user_by_id(esClient, id, dataset_id):
     }}
     user_search_result = search(esClient, indexName, query, 1)
 
+    id = user_search_result["hits"]["hits"][0]["_id"]
     user = user_search_result["hits"]["hits"][0]["_source"]
 
     # ratings_query= {"userid": {
@@ -40,7 +41,7 @@ def get_user_by_id(esClient, id, dataset_id):
     # }}
     print(user)
     result = {"user": {
-        "id":user["_id"]
+        "id":id
        , "age": user[config.USER_FIELD_AGE]
        , "occupation": user[config.USER_FIELD_OCCUPATION]
        , "gender": user[config.USER_FIELD_GENDER]

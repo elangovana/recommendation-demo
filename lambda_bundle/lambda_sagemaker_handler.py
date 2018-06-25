@@ -26,7 +26,7 @@ def lambda_handler(event, context):
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
     recommeded_list = invoke_sagemaker(endpoint, matrix)
 
-    return { "movies":matrix, "recommend":recommeded_list}
+    return { "movies":matrix.toarray(), "recommend":recommeded_list}
 
 
 def convert_to_matrix(moviesList, dataset_id, user_id):

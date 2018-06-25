@@ -26,13 +26,13 @@ def lambda_handler(event, context):
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
 
     recommeded_list = invoke_sagemaker(endpoint, matrix)
-
+    print(recommeded_list)
     result = []
     for i in range(0, len(newMovieList)):
         #if recommeded_list[i] == 0 : continue
         result.append({"movieid":newMovieList[i],"like":recommeded_list[i], "score": recommeded_list[i]})
 
-    return result
+    return recommeded_list
 
 
 def convert_to_matrix(moviesList, dataset_id, user_id):

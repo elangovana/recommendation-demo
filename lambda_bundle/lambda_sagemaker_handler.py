@@ -24,9 +24,15 @@ def lambda_handler(event, context):
     # remove seen movies
     newMovieList = [m for m in seenMovieList if not m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])]
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
+
     recommeded_list = invoke_sagemaker(endpoint, matrix)
 
-    return { "movies":matrix.toarray(), "recommend":recommeded_list}
+    result = []
+    for i in range(0, len(newMovieList)):
+        if recommeded_list[i][1] == 0 : continue
+        result.append({"movieid":newMovieList[i],"like":recommeded_list[i][1], "score": recommeded_list[i][0]})
+
+    return result
 
 
 def convert_to_matrix(moviesList, dataset_id, user_id):

@@ -44,9 +44,10 @@ def lambda_handler(event, context):
     #predictions for unseen movies
     result = []
     i =0;
+    min_confidence_score = 0.9
     for recommeded_list in invoke_sagemaker(endpoint, matrix):
         for movie in recommeded_list:
-            if int(movie["predicted_label"]) == 0: continue
+            if (movie["score"]) < min_confidence_score: continue
             result.append({"movieid": newMovieList[i],
                            "movie_details": movie_dict[str(newMovieList[i])],
                            "like": movie["predicted_label"],

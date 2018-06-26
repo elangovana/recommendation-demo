@@ -44,7 +44,7 @@ def lambda_handler(event, context):
     #predictions for unseen movies
     result = []
     i =0;
-    min_confidence_score = 0.9
+    min_confidence_score = 0.8
     for recommeded_list in invoke_sagemaker(endpoint, matrix):
         for movie in recommeded_list:
             if (movie["score"]) < min_confidence_score: continue
@@ -59,7 +59,7 @@ def lambda_handler(event, context):
     #sort by prediction score
     result.sort(key=lambda x: x["score"], reverse=True)
 
-    return result
+    return result[1:30]
 
 
 def convert_to_matrix(moviesList, dataset_id, user_id):

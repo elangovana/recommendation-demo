@@ -80,23 +80,43 @@
                          Gender: <label id="gender">-</label>
                           <br />
                       <!-- Split button -->
-                      <div class="btn-group">
-                          <button type="button" class="btn btn-primary text-center">
-                              Recommed me a movie</button>
-                         
-                      </div>
+                    
+                          <!-- <button type="button" class="btn btn-primary" onclick="recommendMovies()">
+                              Recommed me a movie</button> -->
+                   
                   </div></p>
           
             </div>
 
           </div>
-          <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet,
-            but not too short so folks don't simply skip over it entirely.</p>
-
+        
         </div>
-
-       
     </section>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+  
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Movies Recommended</th>
+                    <th scope="col">Release Date</th>
+            
+                  </tr>
+                </thead>
+                <tbody id="tbody_movies_recommedation">
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+             
+                  </tr>
+                
+                </tbody>
+              </table>
+        </div>
+      </div>
 
     <div class="album py-5 bg-light">
       <div class="container">
@@ -117,18 +137,7 @@
                   <td>Otto</td>
                   <td>@mdo</td>
                 </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+              
               </tbody>
             </table>
       </div>
@@ -165,9 +174,18 @@
                   <td>{{rating}}</td>
                 </tr>
 </script>
+<script id="movie_recommend_template" type="text/template">
+  <tr>
+                <th scope="row">{{id}}</th>
+                <td>{{movie}}</td>
+                <td>{{movie_release_date}}</td>
+                <td>{{score}}</td>
+              </tr>
+</script>
   <script>
     function getUser() {
-      success = function (data) {
+      var success = function (data) {
+        recommendMovies(data.user.id)
         $("#userId").text(data.user.id);
         $("#age").text(data.user.age);
         $("#occupation").text(data.user.occupation);
@@ -183,6 +201,7 @@
             var html = Mustache.render(template, data);
             $("#tbody_movies_ratings").append(html);
         });
+        
        
       }
 
@@ -193,6 +212,28 @@
       });
       
 
+    }
+
+
+    function recommendMovies(userid){
+      var success = function(data){
+          console.log(data)
+          var template = $("#movie_recommend_template").html();
+          var i =1;
+          $("#tbody_movies_recommedation").html("");
+          data.forEach(recommendation => {
+            data = {"id" :i, "movie_release_date": recommendation.movie_details.movie_release_date, "movie": recommendation.movie_details.movie_title, "score":recommendation.score}
+            i = i+1;
+            var html = Mustache.render(template, data);
+            $("#tbody_movies_recommedation").append(html);
+        });
+      }
+     
+      $.ajax({
+        dataType: "json",
+        url: "/api/recommend?dataset_id=100KDS" + "&" + "userid="+userid,
+        success: success
+      });
     }
   </script>
 </body>

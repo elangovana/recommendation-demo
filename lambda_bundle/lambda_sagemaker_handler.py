@@ -28,6 +28,7 @@ def lambda_handler(event, context):
     #predictions for unseen movies
     recommeded_list = invoke_sagemaker(endpoint, matrix)
     print(recommeded_list)
+    print(type(recommeded_list))
     recommeded_list = recommeded_list["predictions"]
 
 

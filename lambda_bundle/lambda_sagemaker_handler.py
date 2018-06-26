@@ -22,7 +22,7 @@ def lambda_handler(event, context):
                      search_ratings_by_userid(esclient, indexName, user_id)]
 
     # remove seen movies
-    newMovieList = [m for m in seenMovieList if not m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])]
+    newMovieList = [m for m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])  if not m in seenMovieList ]
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
 
     #predictions for unseen movies

@@ -21,32 +21,39 @@ def lambda_handler(event, context):
     seenMovieList = [h["_source"][config.RATINGS_FIELD_MOVIEID] for h in
                      search_ratings_by_userid(esclient, indexName, user_id)]
 
+    print(seenMovieList)
+
     # remove seen movies
-    newMovieList = [m for m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])  if not m in seenMovieList ]
-    matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
-
-    #predictions for unseen movies
-    recommeded_list = json.loads( invoke_sagemaker(endpoint, matrix))
-    print(recommeded_list)
-    print(type(recommeded_list))
-    recommeded_list = recommeded_list["predictions"]
-
-
-    #get movie details
+    newMovieList = [m for m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])  if not str(m) in seenMovieList ]
+    # get movie details
     movies_search = search_movies_by_ids(esclient, indexName, newMovieList)
     movie_dict = {}
     for m in movies_search:
-        movie_dict[m["_id"]] = {"movie_title" : m["_source"][config.MOVIES_FIELD_TITLE],
-                                "movie_release_date":m["_source"][config.MOVIES_FIELD_RELEASEDATE] }
+        movie_dict[m["_id"]] = {"movie_title": m["_source"][config.MOVIES_FIELD_TITLE],
+                                "movie_release_date": m["_source"][config.MOVIES_FIELD_RELEASEDATE]}
 
-    #consolidate results
+
+
+    # prepare matrix
+    print(newMovieList)
+    print(len(newMovieList))
+    matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
+
+
+
+    #predictions for unseen movies
     result = []
-    for i in range(0, len(newMovieList)):
-        if int(recommeded_list[i]["predicted_label"]) == 0 : continue
-        result.append({"movieid":newMovieList[i],
-                       "movie_details":movie_dict[newMovieList[i]],
-                       "like":recommeded_list[i]["predicted_label"],
-                       "score": recommeded_list[i]["score"]})
+    i =0;
+    for recommeded_list in invoke_sagemaker(endpoint, matrix):
+        for movie in recommeded_list:
+            if int(movie["predicted_label"]) == 0: continue
+            result.append({"movieid": newMovieList[i],
+                           "movie_details": movie_dict[str(newMovieList[i])],
+                           "like": movie["predicted_label"],
+                           "score": movie["score"]})
+            i = i + 1
+
+
 
     #sort by prediction score
     result.sort(key=lambda x: x["score"], reverse=True)
@@ -74,15 +81,24 @@ def convert_to_matrix(moviesList, dataset_id, user_id):
 
 def invoke_sagemaker(endpoint, cooMatrix):
     client = boto3.client('runtime.sagemaker')
-    json_data = fm_serializer(cooMatrix.toarray())
-    response = client.invoke_endpoint(
-        EndpointName=endpoint,
-        Body=json_data,
-        ContentType='application/json'
-    )
+    data_array = cooMatrix.toarray()
+    batch_size = 100
+    result = []
+    for i in range(0, len(data_array), batch_size):
 
-    string_data = response["Body"].read().decode("utf-8")
-    return string_data
+        json_data = fm_serializer(data_array[i:i+batch_size])
+        response = client.invoke_endpoint(
+            EndpointName=endpoint,
+            Body=json_data,
+            ContentType='application/json'
+        )
+
+        string_data = json.loads( response["Body"].read().decode("utf-8"))
+        result.extend(string_data["predictions"])
+        yield string_data["predictions"]
+        print(string_data)
+    print(len(result))
+    return result
 
 
 def fm_serializer(data):

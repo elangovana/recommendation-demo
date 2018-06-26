@@ -102,7 +102,7 @@ def search_movies_by_ids(esClient, indexName, movie_ids):
         }
 
     }
-    search_movies_result = search(esClient, indexName, movie_query, {}, 50)["hits"]["hits"]
+    search_movies_result = search(esClient, indexName, movie_query, {}, 100000)["hits"]["hits"]
     return search_movies_result
 
 

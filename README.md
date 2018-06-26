@@ -16,18 +16,6 @@ Systems (TiiS) 5, 4, Article 19 (December 2015), 19 pages.
 DOI=http://dx.doi.org/10.1145/2827872
 
 
-# Build the web app
-1. Create a codepipeline stack using codebuild_cloudformation.json
-2. Start a build on codepipeline. This should upload the following artifacts in the s3 bucket you specified in the codepipeline stack
-  * Cloudformation template
-  * webapp
-  * lambda code
-3. Download the zip of webapp  to your local file system and extract them.
-4. Upload the webfiles to your destination s3 bucket to serve as the content origin
-```shell
-aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
-```
-
 ## 100K Movie Dataset
 1. Download movies
 ```shell
@@ -44,6 +32,19 @@ aws s3 cp u.user s3://<yourbucketData>/users.csv --metadata dataset_id=100KDS,ty
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.data
 aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,type=ratings
+```
+
+
+# Build the web app
+1. Create a codepipeline stack using codebuild_cloudformation.json
+2. Start a build on codepipeline. This should upload the following artifacts in the s3 bucket you specified in the codepipeline stack
+  * Cloudformation template
+  * webapp
+  * lambda code
+3. Download the zip of webapp  to your local file system and extract them.
+4. Upload the webfiles to your destination s3 bucket to serve as the content origin
+```shell
+aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 ```
 
 # Run

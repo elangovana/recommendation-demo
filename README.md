@@ -57,7 +57,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 
 
 # 5. Load Elastic seach movies data
-1. Make sure you that you have metadata "dataset_id" set on the key you want to index to either 100KDS, 20MDS to represent the 2 different data set
+1. Make sure you that you have metadata "dataset_id" & type ( movies, users, ratings) set on the key you want to index to either 100KDS, 20MDS to represent the 2 different data set when you uploaded the file
 
 2. Load movies into elastic search
 ```json

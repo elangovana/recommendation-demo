@@ -18,7 +18,7 @@ Metadata:
       - lambdaSimulateUserFunctionName
       - lambdaMovieRecommendationFunctionName
       - lambdaGetMovieDataSetsFunctionName      
-      - lambdaEnvSagemakerRecommendEndpointName
+      - lambdaEnvSagemakerRecommendEndpointNameHundredK
     - Label:
         default: Apigateway set up
       Parameters:
@@ -87,6 +87,10 @@ Parameters:
     Description: Lambda Function for getting the list of movie datasets
     Type: String
     Default: getMoviedataSets
+  lambdaEnvSagemakerRecommendEndpointNameHundredK:
+    Description: The name of an existing Sagemaker recommendation endpoint for the 100k dataset for the lambda to invoke, e.g factorization-machines-2018-06-19-06-24-41-438.
+    Type: String
+
   s3BucketApiGatewaySwagger:
     Description: The s3 path for api gateway swagger , e.g s3://mybuket/swagger.yaml
     Type: String
@@ -95,9 +99,6 @@ Parameters:
     Type: String
   apigatewayStage:
     Description: The name of the Apigateway stage
-    Type: String
-  lambdaEnvSagemakerRecommendEndpointName:
-    Description: The name of an existing Sagemaker recommendation endpoint for the lambda to invoke
     Type: String
 
 
@@ -240,7 +241,7 @@ Resources:
             - ElasticsearchDomain
             - DomainEndpoint
           sagemaker_endpoint:
-            Ref: lambdaEnvSagemakerRecommendEndpointName
+            Ref: lambdaEnvSagemakerRecommendEndpointNameHundredK
            
       FunctionName: 
         Ref: lambdaMovieRecommendationFunctionName
@@ -339,7 +340,7 @@ Resources:
                 - ":"
                 - Ref: AWS::AccountId
                 - ":endpoint/"
-                - Ref: lambdaEnvSagemakerRecommendEndpointName
+                - Ref: lambdaEnvSagemakerRecommendEndpointNameHundredK
                 - "*"
             - Fn::Join:
               - ''
@@ -348,7 +349,7 @@ Resources:
                 - ":"
                 - Ref: AWS::AccountId
                 - ":endpoint/"
-                - Ref: lambdaEnvSagemakerRecommendEndpointName
+                - Ref: lambdaEnvSagemakerRecommendEndpointNameHundredK
            
       RoleName:
         Fn::Join:

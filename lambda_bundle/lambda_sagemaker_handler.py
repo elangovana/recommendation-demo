@@ -123,7 +123,7 @@ def recordio_load(client, cooMatrix, endpoint, logger):
         )
 
         string_data = json.loads(response["Body"].read().decode("utf-8"))
-        logger.info("Received predictions from sagemaker\n{}".format(string_data))
+        logger.debug("Received predictions from sagemaker\n{}".format(string_data))
         yield string_data["predictions"]
 
 

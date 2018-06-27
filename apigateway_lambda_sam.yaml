@@ -335,8 +335,8 @@ Resources:
             Resource:
             - Fn::Join:
               - ''
-              - - 'arn:aws:sagemaker::'
-                
+              - - 'arn:aws:sagemaker:'
+                - Ref: AWS::Region
                 - ":"
                 - Ref: AWS::AccountId
                 - ":endpoint/"
@@ -344,8 +344,8 @@ Resources:
                 - "/*"
             - Fn::Join:
               - ''
-              - - 'arn:aws:sagemaker::'
-                
+              - - 'arn:aws:sagemaker:'
+                - Ref: AWS::Region
                 - ":"
                 - Ref: AWS::AccountId
                 - ":endpoint/"

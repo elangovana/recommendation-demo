@@ -22,7 +22,7 @@ Make sure the following environment variables are available
 class TestItLambdaSageMakerHandler(TestCase):
     def setUp(self):
         fileConfig(os.path.join(os.path.dirname(__file__), 'logger.ini'))
-        self._logger =  self._logger = logging.getLogger(__name__)
+        self._logger = logging.getLogger(__name__)
 
     def test_recommend(self):
         #Arrange

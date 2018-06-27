@@ -1,9 +1,12 @@
+import logging
+
 import boto3
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from scipy.sparse import lil_matrix
 import json
 import os
-
+from sagemaker.amazon.common import  write_spmatrix_to_sparse_tensor
+import io
 import config
 from elasticsearch_movies import search_ratings_by_userid, search_movies_by_ids
 from elasticsearch_wrapper import connectES
@@ -79,32 +82,62 @@ def convert_to_matrix(moviesList, dataset_id, user_id):
 
 
 def invoke_sagemaker(endpoint, cooMatrix):
+    logger = logging.getLogger(__name__)
     client = boto3.client('runtime.sagemaker')
-    data_array = cooMatrix.toarray()
-    batch_size = 100
-    result = []
-    for i in range(0, len(data_array), batch_size):
 
-        json_data = fm_serializer(data_array[i:i+batch_size])
+    yield from recordio_load(client, cooMatrix, endpoint, logger)
+
+
+def jsonformat_load(client, cooMatrix, endpoint, logger):
+    logger = logging.getLogger(__name__)
+
+    data_array = cooMatrix.toarray()
+    batch_size = 250
+
+    for i in range(0, len(data_array), batch_size):
+        logger.info("Converting to recordio matrix from rows  {} to {} ".format(i, i + batch_size))
+        content_type, data = fm_serializer(data_array[i:i + batch_size])
+        logger.info("Invoking sagemaker from  rows {} to {} data".format(i, i + batch_size))
         response = client.invoke_endpoint(
             EndpointName=endpoint,
-            Body=json_data,
-            ContentType='application/json'
+            Body=data,
+            ContentType=content_type
         )
-
-        string_data = json.loads( response["Body"].read().decode("utf-8"))
-        result.extend(string_data["predictions"])
+        string_data = json.loads(response["Body"].read().decode("utf-8"))
+        logger.info("Received predictions from sagemaker\n{}".format(string_data))
         yield string_data["predictions"]
 
-   
+
+def recordio_load(client, cooMatrix, endpoint, logger):
+        logger = logging.getLogger(__name__)
+        data_array = cooMatrix
+
+
+        logger.info("Converting to recordio matrix from rows ".format())
+        content_type, data = recordio_serialiser(data_array)
+        logger.info("Invoking sagemaker ".format())
+        response = client.invoke_endpoint(
+            EndpointName=endpoint,
+            Body=data,
+            ContentType=content_type
+        )
+
+        string_data = json.loads(response["Body"].read().decode("utf-8"))
+        logger.info("Received predictions from sagemaker\n{}".format(string_data))
+        yield string_data["predictions"]
 
 
 def fm_serializer(data):
     js = {'instances': []}
     for row in data:
         js['instances'].append({'features': row.tolist()})
-    return json.dumps(js)
+    return ('application/json',json.dumps(js))
 
+def recordio_serialiser(data):
+    buf = io.BytesIO()
+    write_spmatrix_to_sparse_tensor(buf, data)
+    buf.seek(0)
+    return ("application/x-recordio-protobuf", buf)
 
 def _get_es_client():
     # es

@@ -1,3 +1,6 @@
+import logging
+import warnings
+from logging.config import fileConfig
 from unittest import TestCase
 import os
 
@@ -17,12 +20,22 @@ Make sure the following environment variables are available
 
 
 class TestItLambdaSageMakerHandler(TestCase):
+    def setUp(self):
+        fileConfig(os.path.join(os.path.dirname(__file__), 'logger.ini'))
+        self._logger =  self._logger = logging.getLogger(__name__)
 
     def test_recommend(self):
-        lambda_sagemaker_handler.lambda_handler({
+        #Arrange
+        warnings.filterwarnings("ignore", category=ResourceWarning)
+
+        #Act
+        result = lambda_sagemaker_handler.lambda_handler({
             "params": {"querystring":
                            {"userid": 90,
                             "dataset_id": config.DATASETID_100K}
                        }
         }
             , None)
+
+
+        self._logger.info(result)

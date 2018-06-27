@@ -1,4 +1,6 @@
 import tempfile
+import warnings
+from logging.config import fileConfig
 from unittest import TestCase
 
 import os
@@ -24,6 +26,9 @@ Make sure the following environment variables are available
 @ddt
 class TestItElasticSearchHandler(TestCase):
 
+    def setUp(self):
+        fileConfig(os.path.join(os.path.dirname(__file__), 'logger.ini'))
+
     @data(
         (config.DATASETID_100K, config.DOCTYPE_MOVIES, "http://files.grouplens.org/datasets/movielens/ml-100k/u.item",
          "tmp")
@@ -32,6 +37,7 @@ class TestItElasticSearchHandler(TestCase):
     @unpack
     def test_recommend(self, dataset_id, doc_type, url, bucket_key):
         # Arrange
+        warnings.filterwarnings("ignore", category=ResourceWarning)
         response = urllib.request.urlopen(url).read()
         bucket = os.environ['TEST_VAR_BUCKET']
         #with tempfile.TemporaryFile() as tmpfile:

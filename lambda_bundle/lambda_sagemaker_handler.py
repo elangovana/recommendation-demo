@@ -20,7 +20,7 @@ def lambda_handler(event, context):
     seenMovieList = [h["_source"][config.RATINGS_FIELD_MOVIEID] for h in
                      search_ratings_by_userid(esclient, indexName, user_id)]
 
-    print(seenMovieList)
+
 
     # remove seen movies
     newMovieList = [m for m in range(1, config.DataSet[dataset_id][config.NB_MOVIES])  if not str(m) in seenMovieList ]
@@ -34,8 +34,7 @@ def lambda_handler(event, context):
 
 
     # prepare matrix
-    print(newMovieList)
-    print(len(newMovieList))
+
     matrix = convert_to_matrix(newMovieList, dataset_id, user_id)
 
 
@@ -96,9 +95,8 @@ def invoke_sagemaker(endpoint, cooMatrix):
         string_data = json.loads( response["Body"].read().decode("utf-8"))
         result.extend(string_data["predictions"])
         yield string_data["predictions"]
-        print(string_data)
-    print(len(result))
-    return result
+
+   
 
 
 def fm_serializer(data):

@@ -341,7 +341,7 @@ Resources:
                 - Ref: AWS::AccountId
                 - ":endpoint/"
                 - Ref: lambdaEnvSagemakerRecommendEndpointNameHundredK
-                - "/*"
+                - "*"
             - Fn::Join:
               - ''
               - - 'arn:aws:sagemaker:'

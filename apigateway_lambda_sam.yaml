@@ -240,7 +240,7 @@ Resources:
             Fn::GetAtt:
             - ElasticsearchDomain
             - DomainEndpoint
-          sagemaker_endpoint:
+          sagemaker_endpoint_100KDS:
             Ref: lambdaEnvSagemakerRecommendEndpointNameHundredK
            
       FunctionName: 

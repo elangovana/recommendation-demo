@@ -340,7 +340,7 @@ Resources:
                 - Ref: AWS::AccountId
                 - ":endpoint/"
                 - Ref: lambdaEnvSagemakerRecommendEndpointName
-                - "/*"
+                - "*"
             - Fn::Join:
               - ''
               - - 'arn:aws:sagemaker:'

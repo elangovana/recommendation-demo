@@ -335,17 +335,17 @@ Resources:
             Resource:
             - Fn::Join:
               - ''
-              - - 'arn:aws:sagemaker:'
-                - Ref: AWS::Region
+              - - 'arn:aws:sagemaker::'
+                
                 - ":"
                 - Ref: AWS::AccountId
                 - ":endpoint/"
                 - Ref: lambdaEnvSagemakerRecommendEndpointNameHundredK
-                - "*"
+                - "/*"
             - Fn::Join:
               - ''
-              - - 'arn:aws:sagemaker:'
-                - Ref: AWS::Region
+              - - 'arn:aws:sagemaker::'
+                
                 - ":"
                 - Ref: AWS::AccountId
                 - ":endpoint/"

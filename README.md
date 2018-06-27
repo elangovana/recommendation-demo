@@ -49,7 +49,7 @@ aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 
 # Run
 1. Deploy cloudformation stack using ./apigateway_lambda_sam.yaml
-[[https://github.com/elangovana/recommendation-demo/raw/master/docs/Recommendation%20Engine%20Web%20App.png]]
+![Architecture](https://github.com/elangovana/recommendation-demo/raw/master/docs/Recommendation%20Engine%20Web%20App.png "Web App Architecture")
 <!-- ```shell
 aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url https://s3.amazonaws.com/aegovan-builds/Cloudformation.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey="elasticSearchDomainName",ParameterValue="movies" ParameterKey="s3BucketData",ParameterValue="aegovanmoviesdata" ParameterKey="lambdaElasticSearchIndexFunctionName",ParameterValue="indexElasticSearch"  ParameterKey="s3BucketLambdaCode",ParameterValue="aegovan-builds" ParameterKey="s3BucketLambdacodeElasticSearchIndex",ParameterValue="lambda_bundle.zip" ParameterKey="s3BucketNameWebApp",ParameterValue="aegovan-builds.s3.amazonaws.com" ParameterKey="s3BucketNameWebAppKey",ParameterValue="/webapp" 
 

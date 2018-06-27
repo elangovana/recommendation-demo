@@ -59,7 +59,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 # 5. Load Elastic seach movies data
 1. Make sure you that you have metadata "dataset_id" (100KDS) & "type" ( movies, users, ratings) when you uploaded the datasets into s3 bucket.  Run the indexElasticSearch function using the following sample test events to load the dataset into Elastic Search
 
-  1. Sample Lambda Test Data - Load movies into elastic search
+  * Sample Lambda Test Data - Load movies into elastic search
 ```json
 {
   "Records": [
@@ -81,7 +81,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 }
 ```
 
-  2. Sample Lambda Test Data - Load users into elastic search
+  * Sample Lambda Test Data - Load users into elastic search
 ```json
 {
   "Records": [
@@ -103,7 +103,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 }
 ```
 
-  3. Sample Lambda Test Data -Load user ratings into elastic search
+  * Sample Lambda Test Data -Load user ratings into elastic search
 ```json
 {
   "Records": [

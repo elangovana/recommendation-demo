@@ -1,13 +1,13 @@
 # Recommendation Demo
 SageMaker recommendation engine demo
 
-# Set up Sagemaker matrix factorisation
+# 1. Set up Sagemaker matrix factorisation
 1. On AWS SageMaker Console launch a new notebook instance.
 2. Run the python notebook sagemaker/factorisation_machines.ipynb. Please note this notebook is sourced from  https://gitlab.com/juliensimon/dlnotebooks. 
 3. Deploy the sagemaker endpoint. This is required to launch the cloudformation web app stack.
 
 
-# Download Public Datasets
+# 2. Download Public Datasets
 We use the MovieLens dataset.
 
 F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens Datasets:
@@ -36,7 +36,7 @@ aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,
 
 
 # Build the web app
-1. Create a codepipeline stack using codebuild_cloudformation.json
+1. Create a codepipeline stack using **codebuild_cloudformation.json**
 2. Start a build on codepipeline. This should upload the following artifacts in the s3 bucket you specified in the codepipeline stack
   * Cloudformation template
   * webapp
@@ -47,8 +47,8 @@ aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,
 aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 ```
 
-# Run
-1. Deploy cloudformation stack using ./apigateway_lambda_sam.yaml
+# 3. Set up the Web App
+1. Deploy cloudformation stack using **apigateway_lambda_sam.yaml** to create the web app.
 ![Architecture](https://github.com/elangovana/recommendation-demo/raw/master/docs/Recommendation%20Engine%20Web%20App.png "Web App Architecture")
 <!-- ```shell
 aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url https://s3.amazonaws.com/aegovan-builds/Cloudformation.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey="elasticSearchDomainName",ParameterValue="movies" ParameterKey="s3BucketData",ParameterValue="aegovanmoviesdata" ParameterKey="lambdaElasticSearchIndexFunctionName",ParameterValue="indexElasticSearch"  ParameterKey="s3BucketLambdaCode",ParameterValue="aegovan-builds" ParameterKey="s3BucketLambdacodeElasticSearchIndex",ParameterValue="lambda_bundle.zip" ParameterKey="s3BucketNameWebApp",ParameterValue="aegovan-builds.s3.amazonaws.com" ParameterKey="s3BucketNameWebAppKey",ParameterValue="/webapp" 
@@ -56,7 +56,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 ``` -->
 
 
-# Load Elastic seach movies data
+# 4. Load Elastic seach movies data
 1. Make sure you that you have metadata "dataset_id" set on the key you want to index to either 100KDS, 20MDS to represent the 2 different data set
 
 2. Load movies into elastic search
@@ -125,6 +125,6 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 }
 ```
 
-# Web app
+# 5. Web app
 Your recommendation engine web app is now ready to use, the url is the output of the cloudformation.
 

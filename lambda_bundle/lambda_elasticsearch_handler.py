@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import tempfile
 import urllib
 import uuid
 
@@ -25,7 +26,8 @@ def index_handler(event, context):
 
 
    # Download s3 object
-    tmp_download_file = '/tmp/{}{}'.format(uuid.uuid4(), key)
+    tmpdir=tempfile.mkdtemp(prefix="test")
+    tmp_download_file = '{}/{}.csv'.format(tmpdir, uuid.uuid4())
     s3_client.download_file(bucket, key, tmp_download_file)
 
     #Index

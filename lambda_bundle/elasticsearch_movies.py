@@ -11,7 +11,7 @@ def index_csv(tmp_download_file, esClient, dataset_id, doc_type):
     fieldnames = config.DataSet[dataset_id][doc_type][config.CSVFIELD_NAMES]
     try:
         indexBulkCsv(esClient, indexName, doc_type, tmp_download_file,
-                     fieldnames, delimiter)
+                     fieldnames, delimiter, encoding= config.DataSet[dataset_id]["Encoding"])
     except Exception as e:
         print(e)
         raise e

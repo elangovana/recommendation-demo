@@ -11,10 +11,9 @@ from elasticsearch_wrapper import connectES
 
 def lambda_handler(event, context):
     # TODO implement
-    endpoint = os.environ['sagemaker_endpoint']
     user_id = event["params"]["querystring"]["userid"]
     dataset_id = event["params"]["querystring"]["dataset_id"]
-
+    endpoint = os.environ['sagemaker_endpoint_{}'.format(dataset_id)]
     # Get movies that user has seen
     esclient = _get_es_client()
     indexName = config.DataSet[dataset_id][config.INDEXNAME]

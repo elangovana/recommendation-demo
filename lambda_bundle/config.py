@@ -19,7 +19,7 @@ RATINGS_FIELD_RATING = "rating"
 MOVIES_FIELD_TITLE = "movietitle"
 MOVIES_FIELD_RELEASEDATE = "releasedate"
 DataSet = {
-    DATASETID_100K: {DATASET_DESCRIPTION: "100K Data set", INDEXNAME: "hundredkds", NB_USERS: 943, NB_MOVIES: 1682,
+    DATASETID_100K: {DATASET_DESCRIPTION: "100K Data set", INDEXNAME: "hundredkds", NB_USERS: 943, NB_MOVIES: 1682, "Encoding":'ISO-8859-1',
                      DOCTYPE_MOVIES:{ CSVFIELD_NAMES: ["_id", MOVIES_FIELD_TITLE, MOVIES_FIELD_RELEASEDATE, "videoreleasedate",
                                             "IMDbURL", "unknown", "Action", "Adventure", "Animation",
                                             "Childrens", "Comedy", "Crime", "Documentary", "Drama", "Fantasy",

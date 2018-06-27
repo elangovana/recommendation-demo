@@ -82,16 +82,16 @@ def convert_to_matrix(moviesList, dataset_id, user_id):
 
 
 def invoke_sagemaker(endpoint, cooMatrix):
-    logger = logging.getLogger(__name__)
+
     client = boto3.client('runtime.sagemaker')
 
-    yield from recordio_load(client, cooMatrix, endpoint, logger)
+    yield from recordio_load(client, cooMatrix, endpoint)
 
 
-def jsonformat_load(client, cooMatrix, endpoint, logger):
+def jsonformat_load(client, lilmatrix, endpoint):
     logger = logging.getLogger(__name__)
 
-    data_array = cooMatrix.toarray()
+    data_array = lilmatrix.toarray()
     batch_size = 250
 
     for i in range(0, len(data_array), batch_size):
@@ -108,13 +108,11 @@ def jsonformat_load(client, cooMatrix, endpoint, logger):
         yield string_data["predictions"]
 
 
-def recordio_load(client, cooMatrix, endpoint, logger):
+def recordio_load(client, lilmatrix, endpoint):
         logger = logging.getLogger(__name__)
-        data_array = cooMatrix
-
 
         logger.info("Converting to recordio matrix from rows ".format())
-        content_type, data = recordio_serialiser(data_array)
+        content_type, data = recordio_serialiser(lilmatrix)
         logger.info("Invoking sagemaker ".format())
         response = client.invoke_endpoint(
             EndpointName=endpoint,

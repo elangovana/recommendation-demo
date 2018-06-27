@@ -35,7 +35,7 @@ aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,
 ```
 
 
-# Build the web app
+# 3. Package the web app
 1. Create a codepipeline stack using **codebuild_cloudformation.json**
 2. Start a build on codepipeline. This should upload the following artifacts in the s3 bucket you specified in the codepipeline stack
   * Cloudformation template
@@ -47,7 +47,7 @@ aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,
 aws s3 cp --recursive ~/Downloads/webapp/ s3://<yourbucket>/webapp
 ```
 
-# 3. Set up the Web App
+# 4. Set up the Web App
 1. Deploy cloudformation stack using **apigateway_lambda_sam.yaml** to create the web app.
 ![Architecture](https://github.com/elangovana/recommendation-demo/raw/master/docs/Recommendation%20Engine%20Web%20App.png "Web App Architecture")
 <!-- ```shell
@@ -56,7 +56,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 ``` -->
 
 
-# 4. Load Elastic seach movies data
+# 5. Load Elastic seach movies data
 1. Make sure you that you have metadata "dataset_id" set on the key you want to index to either 100KDS, 20MDS to represent the 2 different data set
 
 2. Load movies into elastic search
@@ -125,6 +125,6 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 }
 ```
 
-# 5. Web app
+# 6. Web app
 Your recommendation engine web app is now ready to use, the url is the output of the cloudformation.
 

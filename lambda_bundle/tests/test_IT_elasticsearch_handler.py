@@ -33,7 +33,9 @@ class TestItElasticSearchHandler(TestCase):
         (config.DATASETID_100K, config.DOCTYPE_MOVIES, "http://files.grouplens.org/datasets/movielens/ml-100k/u.item",
          "tmp")
     , (config.DATASETID_100K, config.DOCTYPE_USERS, "http://files.grouplens.org/datasets/movielens/ml-100k/u.user",
-         "tmp"))
+         "tmp")
+
+    , (config.DATASETID_100K, config.DOCTYPE_RATINGS, "http://files.grouplens.org/datasets/movielens/ml-100k/u.data", "tmp"))
     @unpack
     def test_recommend(self, dataset_id, doc_type, url, bucket_key):
         # Arrange

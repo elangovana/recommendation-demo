@@ -17,18 +17,18 @@ DOI=http://dx.doi.org/10.1145/2827872
 
 
 ## 100K Movie Dataset
-1. Download movies
+1. Download movies & upload to s3 with the right metadata. This metadata is later used to index elastic search
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.item
 aws s3 cp u.item s3://<yourbucketData>/movies.csv --metadata dataset_id=100KDS,type=movies
 ```
-2. Download users
+2. Download users & upload to s3 with the right metadata. This metadata is later used to index elastic search
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.user
 aws s3 cp u.user s3://<yourbucketData>/users.csv --metadata dataset_id=100KDS,type=users
 ```
 
-3. Download ratings
+3. Download ratings & upload to s3 with the right metadata. This metadata is later used to index elastic search
 ```shell
 wget http://files.grouplens.org/datasets/movielens/ml-100k/u.data
 aws s3 cp u.data s3://<yourbucketData>/ratings.csv --metadata dataset_id=100KDS,type=ratings
@@ -57,9 +57,9 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 
 
 # 5. Load Elastic seach movies data
-1. Make sure you that you have metadata "dataset_id" & type ( movies, users, ratings) set on the key you want to index to either 100KDS, 20MDS to represent the 2 different data set when you uploaded the file
+1. Make sure you that you have metadata "dataset_id" (100KDS) & "type" ( movies, users, ratings) when you uploaded the datasets into s3 bucket.  Run the indexElasticSearch function using the following sample test events to load the dataset into Elastic Search
 
-2. Load movies into elastic search
+  1. Sample Lambda Test Data - Load movies into elastic search
 ```json
 {
   "Records": [
@@ -81,7 +81,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 }
 ```
 
-3. Load users into elastic search
+  2. Sample Lambda Test Data - Load users into elastic search
 ```json
 {
   "Records": [
@@ -103,7 +103,7 @@ aws cloudformation create-stack  --stack-name RecommeddationDemo --template-url 
 }
 ```
 
-4. Load user ratings into elastic search
+  3. Sample Lambda Test Data -Load user ratings into elastic search
 ```json
 {
   "Records": [
